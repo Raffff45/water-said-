@@ -19,26 +19,18 @@ export default function Hero() {
       return;
     }
 
-    const text = `
-🔥 Новая заявка
-👤 ФИО: ${name}
-📞 Телефон: +${digits}
-    `;
-
     try {
-      await fetch(
-        "https://api.telegram.org/bot8371302783:AAHBG-UFcawgnSVq3BUVN8t-uPeTYt1C_HI/sendMessage",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            chat_id: "-5255251767",
-            text,
-          }),
-        }
-      );
+      // ✅ ВАЖНО: теперь отправляем НЕ в Telegram, а в свой API
+      await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          phone: "+" + digits,
+        }),
+      });
 
       alert("Заявка отправлена 🚀");
       setOpen(false);
@@ -82,7 +74,7 @@ export default function Hero() {
           Мы свяжемся с вами в течение 5 минут
         </p>
 
-        {/* 👤 ФИО */}
+        {/* ФИО */}
         <input
           type="text"
           placeholder="Иванов Иван Иванович"
@@ -96,7 +88,7 @@ export default function Hero() {
           style={inputStyle}
         />
 
-        {/* 📞 Телефон с маской */}
+        {/* Телефон */}
         <input
           type="tel"
           placeholder="+7 (707) 730-68-46"
