@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import Modal from './Modal';
 
 function Fountain3D() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -629,6 +630,8 @@ function Purifier3D() {
 }
 
 export default function Products() {
+  const [modal, setModal] = useState<string | null>(null);
+
   return (
     <section id="products" className="pad">
       <div className="wrap">
@@ -670,7 +673,12 @@ export default function Products() {
                 <div className="spec-item"><span className="spec-dot"></span>Мед. нержавейка</div>
                 <div className="spec-item"><span className="spec-dot"></span>Настенный монтаж</div>
               </div>
-              <button className="prod-cta">Узнать подробнее →</button>
+              <button 
+  className="prod-cta"
+  onClick={() => setModal("fountain")}
+>
+  Узнать подробнее →
+</button>
             </div>
           </div>
 
@@ -700,11 +708,70 @@ export default function Products() {
                 <div className="spec-item"><span className="spec-dot"></span>LED-индикация</div>
                 <div className="spec-item"><span className="spec-dot"></span>Напольный монтаж</div>
               </div>
-              <button className="prod-cta">Узнать подробнее →</button>
+             <button 
+  className="prod-cta"
+  onClick={() => setModal("purifier")}
+>
+  Узнать подробнее →
+</button>
             </div>
           </div>
         </div>
       </div>
+      <Modal isOpen={modal === "fountain"} onClose={() => setModal(null)}>
+  <h2 style={{ marginBottom: 10 }}>Питьевой фонтанчик</h2>
+
+  <p style={{ color: "#9fc0d4", lineHeight: "1.6" }}>
+    Надёжное решение для школ, ТРЦ и общественных пространств.
+    Полностью автоматическая подача воды с фильтрацией и охлаждением.
+  </p>
+
+  {/* ВИДЕО */}
+  <div style={{ marginTop: 20 }}>
+    <iframe
+      width="100%"
+      height="260"
+      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+      title="Видео"
+      frameBorder="0"
+      allowFullScreen
+    />
+  </div>
+
+  <ul style={{ marginTop: 20, color: "#9fc0d4" }}>
+    <li>✔ Бесконтактный датчик</li>
+    <li>✔ Охлаждение воды до +7°C</li>
+    <li>✔ Вандалоустойчивый корпус</li>
+    <li>✔ До 600 л/сутки</li>
+  </ul>
+</Modal>
+<Modal isOpen={modal === "purifier"} onClose={() => setModal(null)}>
+  <h2 style={{ marginBottom: 10 }}>Пурификатор воды</h2>
+
+  <p style={{ color: "#9fc0d4", lineHeight: "1.6" }}>
+    Идеальное решение для офисов и дома.
+    Глубокая очистка воды с системой обратного осмоса и УФ.
+  </p>
+
+  {/* ВИДЕО */}
+  <div style={{ marginTop: 20 }}>
+    <iframe
+      width="100%"
+      height="260"
+      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+      title="Видео"
+      frameBorder="0"
+      allowFullScreen
+    />
+  </div>
+
+  <ul style={{ marginTop: 20, color: "#9fc0d4" }}>
+    <li>✔ 3 температуры воды</li>
+    <li>✔ Обратный осмос</li>
+    <li>✔ УФ-стерилизация</li>
+    <li>✔ 99.97% очистки</li>
+  </ul>
+</Modal>
     </section>
   );
 }
