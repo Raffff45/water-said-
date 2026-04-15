@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Calculator, TrendingDown, CheckCircle, X } from "lucide-react";
 
 const ComparisonSection = () => {
   const [teamSize, setTeamSize] = useState<string>("");
@@ -296,6 +295,9 @@ const ComparisonSection = () => {
             gap: '1.4rem'
           }}>
             {[
+              ['💰', 'Дешевле', 'В 10+ раз ниже цена за литр'],
+              ['♻️', 'Экологично', 'Ноль пластиковых отходов'],
+              ['🚀', 'Удобнее', 'Вода всегда под рукой'],
               ['💰', 'Дешевле', 'В 10+ раз ниже цена за литр'],
               ['♻️', 'Экологично', 'Ноль пластиковых отходов'],
               ['🚀', 'Удобнее', 'Вода всегда под рукой']
