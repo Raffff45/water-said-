@@ -16,7 +16,7 @@ const ComparisonSection = () => {
   const avgWeight = 70;
   const bottlePrice = 1100;
   const bottleVolume = 19;
-  const purifierCost = 4;
+  const purifierCost = 5;
   
   const dispenserPricePerLiter = bottlePrice / bottleVolume;
   const teamSizeNum = Number(teamSize) || 0;
