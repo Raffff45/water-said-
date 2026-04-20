@@ -6,18 +6,17 @@ function InstallationCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let W: number, H: number, t = 0;
+    let W: number, H: number, t = 0, animId: number;
 
     const resize = () => {
       W = canvas.width = canvas.parentElement!.clientWidth;
       H = canvas.height = canvas.parentElement!.clientHeight;
     };
-
     resize();
+    window.addEventListener('resize', resize);
 
     const orbs: Array<{ a: number; sp: number; rad: number; oy: number }> = [];
     for (let i = 0; i < 22; i++) {
@@ -30,35 +29,50 @@ function InstallationCanvas() {
     }
 
     const draw = () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
       ctx.clearRect(0, 0, W, H);
+
+      // Фон
       const bg = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, H * 0.72);
-      bg.addColorStop(0, 'rgba(0,20,48,.95)');
-      bg.addColorStop(1, 'rgba(4,17,31,1)');
+      if (isLight) {
+        bg.addColorStop(0, 'rgba(180,220,240,.6)');
+        bg.addColorStop(1, 'rgba(220,240,255,1)');
+      } else {
+        bg.addColorStop(0, 'rgba(0,20,48,.95)');
+        bg.addColorStop(1, 'rgba(4,17,31,1)');
+      }
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
 
-      const cx = W / 2,
-        cy = H / 2;
+      const cx = W / 2, cy = H / 2;
+
+      // Орбы
+      const orbColor = isLight ? 'rgba(0,100,160,.5)' : 'rgba(0,200,255,.45)';
+      const lineColor = isLight ? 'rgba(0,100,160,.07)' : 'rgba(0,150,200,.05)';
       orbs.forEach((o) => {
         o.a += o.sp;
-        const ox = cx + Math.cos(o.a) * o.rad,
-          oy = cy + o.oy + Math.sin(o.a) * o.rad * 0.28;
+        const ox = cx + Math.cos(o.a) * o.rad;
+        const oy = cy + o.oy + Math.sin(o.a) * o.rad * 0.28;
         ctx.beginPath();
         ctx.arc(ox, oy, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0,200,255,.45)';
+        ctx.fillStyle = orbColor;
         ctx.fill();
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo(ox, oy);
-        ctx.strokeStyle = 'rgba(0,150,200,.05)';
+        ctx.strokeStyle = lineColor;
         ctx.lineWidth = 0.6;
         ctx.stroke();
       });
 
+      // Пульсирующие кольца вокруг центра
       for (let i = 3; i > 0; i--) {
         const r2 = 32 + i * 20 + Math.sin(t * 0.035) * 4;
         const g2 = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
-        g2.addColorStop(0, `rgba(0,200,255,${0.14 / i})`);
+        const alpha = isLight ? 0.1 / i : 0.14 / i;
+        const color = isLight ? `rgba(0,100,160,${alpha})` : `rgba(0,200,255,${alpha})`;
+        g2.addColorStop(0, color);
         g2.addColorStop(1, 'transparent');
         ctx.fillStyle = g2;
         ctx.beginPath();
@@ -66,37 +80,56 @@ function InstallationCanvas() {
         ctx.fill();
       }
 
+      // Центральный шар
       ctx.beginPath();
       ctx.arc(cx, cy, 26, 0, Math.PI * 2);
       const cg = ctx.createRadialGradient(cx - 6, cy - 6, 2, cx, cy, 26);
-      cg.addColorStop(0, 'rgba(200,240,255,1)');
-      cg.addColorStop(0.4, 'rgba(0,200,255,.9)');
-      cg.addColorStop(1, 'rgba(0,60,140,.4)');
+      if (isLight) {
+        cg.addColorStop(0, 'rgba(255,255,255,1)');
+        cg.addColorStop(0.4, 'rgba(0,140,200,.9)');
+        cg.addColorStop(1, 'rgba(0,80,160,.4)');
+      } else {
+        cg.addColorStop(0, 'rgba(200,240,255,1)');
+        cg.addColorStop(0.4, 'rgba(0,200,255,.9)');
+        cg.addColorStop(1, 'rgba(0,60,140,.4)');
+      }
       ctx.fillStyle = cg;
       ctx.fill();
 
+      // Расходящиеся волны
       for (let i = 0; i < 3; i++) {
-        const rph = ((t * 0.018 + i / 3) % 1);
+        const rph = (t * 0.018 + i / 3) % 1;
         ctx.beginPath();
         ctx.arc(cx, cy, 48 + rph * 110, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(0,200,255,${0.22 * (1 - rph)})`;
+        const waveColor = isLight
+          ? `rgba(0,100,160,${0.18 * (1 - rph)})`
+          : `rgba(0,200,255,${0.22 * (1 - rph)})`;
+        ctx.strokeStyle = waveColor;
         ctx.lineWidth = 0.8;
         ctx.stroke();
       }
 
-      ctx.fillStyle = 'rgba(0,200,255,.55)';
+      // Текст
+      const textMain = isLight ? 'rgba(0,80,140,.7)' : 'rgba(0,200,255,.55)';
+      const textSub  = isLight ? 'rgba(0,80,140,.45)' : 'rgba(100,180,220,.45)';
+      ctx.fillStyle = textMain;
       ctx.font = `400 ${Math.round(W * 0.038)}px Outfit,sans-serif`;
       ctx.textAlign = 'center';
       ctx.fillText('Умное подключение', cx, cy + H * 0.3);
       ctx.font = `300 ${Math.round(W * 0.03)}px Outfit,sans-serif`;
-      ctx.fillStyle = 'rgba(100,180,220,.45)';
+      ctx.fillStyle = textSub;
       ctx.fillText('IoT · Мониторинг · Сервис', cx, cy + H * 0.37);
 
       t++;
-      requestAnimationFrame(draw);
+      animId = requestAnimationFrame(draw);
     };
 
     draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+    };
   }, []);
 
   return <canvas ref={canvasRef} id="install-canvas"></canvas>;
