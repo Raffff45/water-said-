@@ -563,6 +563,30 @@ footer{
   z-index: -1; /* Под контентом */
 }
 
+.ben-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(4, 17, 31, 0.8);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+  color: var(--cyan);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.ben-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ben-card:hover .ben-icon-wrap {
+  border-color: rgba(0, 200, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.15);
+}
+
 @media(max-width:960px){
   nav,footer,.fbot,.pad{padding-left:1.8rem;padding-right:1.8rem}
   .nav-links{display:none}
