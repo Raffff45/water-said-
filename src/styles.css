@@ -622,3 +622,189 @@ footer{
     cursor: auto !important;
   }
 }
+
+/* переход между темами */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
+  animation-name: radial-reveal;
+}
+
+@keyframes radial-reveal {
+  to {
+    clip-path: circle(200vmax at var(--x, 50%) var(--y, 50%));
+  }
+}
+
+/* СВЕТЛАЯ ТЕМА */
+:root.light {
+  --ink: #f4fbff;
+  --deep: #dff3fb;
+  --mid: #c6e7f5;
+  --sky: #7bbdd8;
+  --ice: #07131f;
+  --cyan: #009fd1;
+  --teal: #00bfa5;
+  --pearl: #ffffff;
+  --silver: #4d6b7c;
+  --glass: rgba(255,255,255,0.55);
+  --glass2: rgba(255,255,255,0.35);
+  --border: rgba(0,159,209,0.16);
+  --border2: rgba(7,19,31,0.08);
+  --glow: 0 0 40px rgba(0,159,209,.12);
+}
+
+/* Плавность смены цветов без поломки анимаций */
+body,
+nav,
+nav.scrolled,
+.prod-card,
+.ben-card,
+.review,
+.client-card,
+.install-vis,
+.cta-sec,
+footer,
+.fbot,
+.btn-p,
+.btn-g,
+.nav-cta,
+.prod-cta,
+.social-footer a,
+.social-footer button,
+.step-icon,
+.istep,
+.faq-q,
+.faq-a,
+.cmp-table td,
+.cmp-table th {
+  transition:
+    background-color .35s ease,
+    color .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease,
+    backdrop-filter .35s ease;
+}
+
+/* Тонкая подстройка для светлой темы */
+:root.light body {
+  background:
+    radial-gradient(circle at top, rgba(0,159,209,.08), transparent 35%),
+    var(--ink);
+  color: var(--ice);
+}
+
+:root.light nav.scrolled {
+  background: rgba(244, 251, 255, 0.82);
+  border-bottom: 1px solid var(--border);
+}
+
+:root.light .logo,
+:root.light .sec-h2,
+:root.light .hero-title,
+:root.light .prod-name,
+:root.light .ben-title,
+:root.light .client-title,
+:root.light .cta-title,
+:root.light .flogo,
+:root.light .rname,
+:root.light .step-title,
+:root.light .istep-title,
+:root.light .faq-q,
+:root.light .cmp-table td:first-child {
+  color: #07131f;
+}
+
+:root.light .hero-sub,
+:root.light .body-t,
+:root.light .prod-desc,
+:root.light .ben-text,
+:root.light .client-text,
+:root.light .cta-sub,
+:root.light .fdesc,
+:root.light .rrole,
+:root.light .step-text,
+:root.light .istep-desc,
+:root.light .faq-a p,
+:root.light .cmp-table td,
+:root.light .fbot span,
+:root.light .nav-links a {
+  color: #4d6b7c;
+}
+
+:root.light .nav-links a:hover,
+:root.light .faq-q:hover,
+:root.light .logo em,
+:root.light .sec-h2 em,
+:root.light .hero-title em,
+:root.light .flogo em,
+:root.light .prod-sub,
+:root.light .sec-tag,
+:root.light .hero-eyebrow {
+  color: var(--cyan);
+}
+
+:root.light .prod-card,
+:root.light .ben-card,
+:root.light .review,
+:root.light .install-vis,
+:root.light .client-card {
+  background: var(--glass);
+  border-color: var(--border2);
+  box-shadow: 0 20px 60px rgba(7, 19, 31, 0.06);
+}
+
+:root.light .prod-stage,
+:root.light .install-vis {
+  background:
+    radial-gradient(ellipse at 50% 60%, rgba(0,159,209,.10), rgba(255,255,255,1));
+}
+
+:root.light .step-icon,
+:root.light .ben-icon-wrap {
+  background: rgba(255,255,255,.75);
+  border-color: rgba(0,159,209,.20);
+}
+
+:root.light .btn-g {
+  color: #07131f;
+  border: 1px solid rgba(0,159,209,.24);
+  background: rgba(255,255,255,.35);
+}
+
+:root.light .btn-g:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+}
+
+:root.light .prod-cta {
+  background: linear-gradient(135deg, rgba(0,159,209,.08), rgba(0,191,165,.06));
+  border-color: rgba(0,159,209,.18);
+  color: var(--cyan);
+}
+
+:root.light .cmp-table thead th {
+  background: rgba(0,159,209,.05);
+}
+
+:root.light .cmp-table tr:hover td {
+  background: rgba(7,19,31,.025);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms;
+  }
+}
