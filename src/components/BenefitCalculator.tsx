@@ -252,38 +252,6 @@ const ComparisonSection = () => {
           </div>
         ) : null}
 
-        {/* Почему пурифайер лучше */}
-        <div style={{ marginTop: isMobile ? '1rem' : '2rem' }}>
-          <div style={{ textAlign: 'center', marginBottom: isMobile ? '2rem' : '3.5rem' }}>
-            <span className="sec-tag">Сравнение</span>
-            <h3 style={{
-              fontSize: isMobile ? '1.6rem' : '2.2rem',
-              fontFamily: "'Playfair Display',Georgia,serif",
-              fontWeight: 300,
-              color: mainTextColor,
-              lineHeight: 1.2,
-            }}>
-              Почему пурифайер <em style={{ fontStyle: 'italic', color: '#00c8ff' }}>лучше</em>
-            </h3>
-          </div>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
-            gap: isMobile ? '1rem' : '1.4rem',
-          }}>
-            {whyItems.map((item, idx) => (
-              <div key={idx} className="ben-card" style={{ padding: isMobile ? '1.6rem' : '2.2rem' }}>
-                <div className="ben-icon-wrap">{item.svg}</div>
-                <div className="ben-title" style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: mainTextColor }}>
-                  {item.title}
-                </div>
-                <p className="ben-text" style={{ color: secondaryTextColor }}>
-                  {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
