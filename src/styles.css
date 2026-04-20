@@ -17,6 +17,153 @@
   --sans:'Outfit',sans-serif;
   --glow:0 0 40px rgba(0,200,255,.18);
 }
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
+[data-theme="light"]{
+  --ink:#e8f6ff;
+  --deep:#d0ecf8;
+  --mid:#b8e2f5;
+  --sky:#1a4a6e;
+  --ice:#0a2540;
+  --cyan:#0077aa;
+  --teal:#008b8b;
+  --pearl:#04111f;
+  --silver:#1a4a6e;
+  --glass:rgba(0,60,120,0.08);
+  --glass2:rgba(0,60,120,0.04);
+  --border:rgba(0,119,170,0.18);
+  --border2:rgba(0,60,120,0.12);
+  --glow:0 0 40px rgba(0,119,170,.15);
+}
+
+[data-theme="light"] body {
+  background: #dff0fa;
+  color: var(--ice);
+}
+[data-theme="light"] #water-bg { opacity: 0.25; filter: hue-rotate(180deg) brightness(1.8) saturate(0.6); }
+[data-theme="light"] nav.scrolled { background: rgba(220,240,255,0.92); }
+[data-theme="light"] .nav-links a { color: rgba(4,17,31,0.55); }
+[data-theme="light"] .nav-links a:hover { color: var(--cyan); }
+[data-theme="light"] .logo { color: var(--pearl); }
+[data-theme="light"] .hero-title { color: var(--pearl); }
+[data-theme="light"] .sec-h2 { color: var(--pearl); }
+[data-theme="light"] .prod-card { background: rgba(255,255,255,0.7); border-color: rgba(0,119,170,0.15); }
+[data-theme="light"] .divider { background: linear-gradient(90deg,transparent,rgba(0,119,170,0.12),transparent); }
+[data-theme="light"] .prod-stage {
+  background: radial-gradient(ellipse at 50% 60%, rgba(180,220,240,.4), rgba(220,240,255,1));
+}
+[data-theme="light"] .install-vis {
+  background: radial-gradient(ellipse at 50% 40%, rgba(180,220,240,.5), rgba(220,240,255,1));
+  border-color: rgba(0,119,170,0.2);
+}
+[data-theme="light"] .client-overlay {
+  background: linear-gradient(to top, rgba(220,240,255,.96) 40%, rgba(220,240,255,.1));
+}
+[data-theme="light"] .step-icon {
+  background: rgba(200,230,245,.7);
+  border-color: rgba(0,119,170,0.25);
+}
+[data-theme="light"] #cursor {
+  mix-blend-mode: multiply;
+  background: radial-gradient(circle, rgba(0,119,170,.7), rgba(0,119,170,.15));
+}
+[data-theme="light"] footer {
+  background: rgba(200,230,248,0.3);
+}
+[data-theme="light"] .how-wrap {
+  background: linear-gradient(180deg,transparent,rgba(180,220,240,.3) 20%,rgba(180,220,240,.3) 80%,transparent);
+}
+[data-theme="light"] .ben-card {
+  background: rgba(255,255,255,0.5);
+  border-color: rgba(0,119,170,0.12);
+}
+[data-theme="light"] .review {
+  background: rgba(255,255,255,0.5);
+  border-color: rgba(0,119,170,0.12);
+}
+[data-theme="light"] .cta-glow {
+  background: radial-gradient(circle,rgba(0,119,170,.07),transparent 65%);
+}
+[data-theme="light"] nav { color: var(--pearl); }
+[data-theme="light"] .nav-cta { color: #fff; }
+
+/* ============================================================
+   WATERFALL TRANSITION OVERLAY
+   ============================================================ */
+#waterfall-transition {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Individual water streams */
+.wt-stream {
+  position: absolute;
+  top: -100%;
+  width: 2px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(0,200,255,0.8) 20%,
+    rgba(0,230,240,0.9) 50%,
+    rgba(180,240,255,0.7) 80%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  animation: wt-fall linear forwards;
+}
+[data-theme="light"] .wt-stream {
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(180,230,255,0.9) 20%,
+    rgba(220,245,255,0.95) 50%,
+    rgba(240,250,255,0.8) 80%,
+    transparent 100%
+  );
+}
+
+@keyframes wt-fall {
+  0%   { top: -100%; opacity: 0; }
+  5%   { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 110%; opacity: 0; }
+}
+
+/* Ripple burst at the end */
+.wt-ripple {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(0,200,255,0.5);
+  transform: translate(-50%, 50%) scale(0);
+  animation: wt-ripple-expand 0.6s ease-out forwards;
+}
+[data-theme="light"] .wt-ripple {
+  border-color: rgba(0,119,170,0.4);
+}
+@keyframes wt-ripple-expand {
+  0%   { transform: translate(-50%, 50%) scale(0); opacity: 0.8; }
+  100% { transform: translate(-50%, 50%) scale(4); opacity: 0; }
+}
+
+/* Flash bloom when theme switches */
+.wt-bloom {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+  animation: wt-bloom-fade 0.5s ease-out forwards;
+}
+@keyframes wt-bloom-fade {
+  0%   { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -495,25 +642,19 @@ footer{
   gap: 14px;
 }
 
-/* ссылки (например Instagram) */
 .social-footer a {
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
   font-size: 18px;
-
   color: var(--cyan);
   text-decoration: none;
-
   background: var(--glass);
   border: 1px solid var(--border);
-
   backdrop-filter: blur(10px);
-
   transition: all .3s ease;
 }
 
@@ -524,23 +665,18 @@ footer{
   border-color: transparent;
 }
 
-/* кнопки (модалки) */
 .social-footer button {
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
   font-size: 18px;
-
   color: var(--cyan);
   background: var(--glass);
   border: 1px solid var(--border);
-
   backdrop-filter: blur(10px);
-
   cursor: pointer;
   transition: all .3s ease;
 }
@@ -558,9 +694,9 @@ footer{
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Чтобы изображение заполняло карточку без искажений */
-  border-radius: inherit; /* Если карточка имеет скругления */
-  z-index: -1; /* Под контентом */
+  object-fit: cover;
+  border-radius: inherit;
+  z-index: -1;
 }
 
 .ben-icon-wrap {
@@ -596,7 +732,6 @@ footer{
   footer{grid-template-columns:1fr 1fr}
   .hero-title{font-size:3rem}
   .how-flow::before{display:none}
-  
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -604,207 +739,52 @@ footer{
   #cursor-ring {
     display: none !important;
   }
-
-  html {
+  html, body {
     cursor: auto !important;
   }
 }
-
-/* ОТКЛЮЧАЕМ КАСТОМНЫЙ КУРСОР НА ТЕЛЕФОНАХ */
-@media (hover: none) and (pointer: coarse) {
-  #cursor,
-  #cursor-ring {
-    display: none !important;
-  }
-
-  html,
-  body {
-    cursor: auto !important;
-  }
+[data-theme="light"] .pill {
+  background: rgba(0, 60, 120, 0.08);
+  color: rgba(4, 17, 31, 0.5);
+  border-color: rgba(0, 100, 160, 0.2);
 }
 
-/* переход между темами */
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 700ms;
-  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+[data-theme="light"] .pill.active {
+  background: rgba(0, 119, 170, 0.15);
+  color: #0077aa;
+  border-color: rgba(0, 119, 170, 0.4);
 }
 
-::view-transition-old(root) {
-  z-index: 1;
+[data-theme="light"] .pill.done {
+  background: rgba(0, 139, 139, 0.15);
+  color: #008b8b;
+  border-color: rgba(0, 139, 139, 0.35);
 }
 
-::view-transition-new(root) {
-  z-index: 2;
-  clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
-  animation-name: radial-reveal;
+[data-theme="light"] .top-label {
+  color: rgba(4, 17, 31, 0.5);
 }
 
-@keyframes radial-reveal {
-  to {
-    clip-path: circle(200vmax at var(--x, 50%) var(--y, 50%));
-  }
+[data-theme="light"] .sec-title {
+  color: #04111f;
 }
 
-/* СВЕТЛАЯ ТЕМА */
-:root.light {
-  --ink: #f4fbff;
-  --deep: #dff3fb;
-  --mid: #c6e7f5;
-  --sky: #7bbdd8;
-  --ice: #07131f;
-  --cyan: #009fd1;
-  --teal: #00bfa5;
-  --pearl: #ffffff;
-  --silver: #4d6b7c;
-  --glass: rgba(255,255,255,0.55);
-  --glass2: rgba(255,255,255,0.35);
-  --border: rgba(0,159,209,0.16);
-  --border2: rgba(7,19,31,0.08);
-  --glow: 0 0 40px rgba(0,159,209,.12);
+[data-theme="light"] .btn-rst {
+  color: rgba(4, 17, 31, 0.6);
+  border-color: rgba(0, 100, 160, 0.25);
 }
 
-/* Плавность смены цветов без поломки анимаций */
-body,
-nav,
-nav.scrolled,
-.prod-card,
-.ben-card,
-.review,
-.client-card,
-.install-vis,
-.cta-sec,
-footer,
-.fbot,
-.btn-p,
-.btn-g,
-.nav-cta,
-.prod-cta,
-.social-footer a,
-.social-footer button,
-.step-icon,
-.istep,
-.faq-q,
-.faq-a,
-.cmp-table td,
-.cmp-table th {
-  transition:
-    background-color .35s ease,
-    color .35s ease,
-    border-color .35s ease,
-    box-shadow .35s ease,
-    backdrop-filter .35s ease;
+[data-theme="light"] .btn-rst:hover {
+  background: rgba(0, 60, 120, 0.08);
+  color: #04111f;
 }
 
-/* Тонкая подстройка для светлой темы */
-:root.light body {
-  background:
-    radial-gradient(circle at top, rgba(0,159,209,.08), transparent 35%),
-    var(--ink);
-  color: var(--ice);
+[data-theme="light"] .ben-icon-wrap {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 119, 170, 0.2);
 }
 
-:root.light nav.scrolled {
-  background: rgba(244, 251, 255, 0.82);
-  border-bottom: 1px solid var(--border);
-}
-
-:root.light .logo,
-:root.light .sec-h2,
-:root.light .hero-title,
-:root.light .prod-name,
-:root.light .ben-title,
-:root.light .client-title,
-:root.light .cta-title,
-:root.light .flogo,
-:root.light .rname,
-:root.light .step-title,
-:root.light .istep-title,
-:root.light .faq-q,
-:root.light .cmp-table td:first-child {
-  color: #07131f;
-}
-
-:root.light .hero-sub,
-:root.light .body-t,
-:root.light .prod-desc,
-:root.light .ben-text,
-:root.light .client-text,
-:root.light .cta-sub,
-:root.light .fdesc,
-:root.light .rrole,
-:root.light .step-text,
-:root.light .istep-desc,
-:root.light .faq-a p,
-:root.light .cmp-table td,
-:root.light .fbot span,
-:root.light .nav-links a {
-  color: #4d6b7c;
-}
-
-:root.light .nav-links a:hover,
-:root.light .faq-q:hover,
-:root.light .logo em,
-:root.light .sec-h2 em,
-:root.light .hero-title em,
-:root.light .flogo em,
-:root.light .prod-sub,
-:root.light .sec-tag,
-:root.light .hero-eyebrow {
-  color: var(--cyan);
-}
-
-:root.light .prod-card,
-:root.light .ben-card,
-:root.light .review,
-:root.light .install-vis,
-:root.light .client-card {
-  background: var(--glass);
-  border-color: var(--border2);
-  box-shadow: 0 20px 60px rgba(7, 19, 31, 0.06);
-}
-
-:root.light .prod-stage,
-:root.light .install-vis {
-  background:
-    radial-gradient(ellipse at 50% 60%, rgba(0,159,209,.10), rgba(255,255,255,1));
-}
-
-:root.light .step-icon,
-:root.light .ben-icon-wrap {
-  background: rgba(255,255,255,.75);
-  border-color: rgba(0,159,209,.20);
-}
-
-:root.light .btn-g {
-  color: #07131f;
-  border: 1px solid rgba(0,159,209,.24);
-  background: rgba(255,255,255,.35);
-}
-
-:root.light .btn-g:hover {
-  color: var(--cyan);
-  border-color: var(--cyan);
-}
-
-:root.light .prod-cta {
-  background: linear-gradient(135deg, rgba(0,159,209,.08), rgba(0,191,165,.06));
-  border-color: rgba(0,159,209,.18);
-  color: var(--cyan);
-}
-
-:root.light .cmp-table thead th {
-  background: rgba(0,159,209,.05);
-}
-
-:root.light .cmp-table tr:hover td {
-  background: rgba(7,19,31,.025);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 1ms;
-  }
+[data-theme="light"] .ben-card:hover .ben-icon-wrap {
+  border-color: rgba(0, 119, 170, 0.5);
+  box-shadow: 0 0 20px rgba(0, 119, 170, 0.12);
 }
