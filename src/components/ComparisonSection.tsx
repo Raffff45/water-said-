@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 const ComparisonSection = () => {
   const [teamSize, setTeamSize] = useState<string>("");
   const [isMobile, setIsMobile] = useState(false);
+  const [isLight, setIsLight] = useState(
+    document.documentElement.getAttribute("data-theme") === "light"
+  );
 
+  // Мобильная адаптация
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
@@ -11,11 +15,23 @@ const ComparisonSection = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Отслеживание темы
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.getAttribute("data-theme") === "light");
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const bottlePrice = 1100;
   const bottleVolume = 19;
   const purifierCost = 5;
-
   const dispenserPricePerLiter = bottlePrice / bottleVolume;
+
   const teamSizeNum = Number(teamSize) || 0;
   const dailyWaterPerPerson = (70 * 30) / 1000;
   const monthlyWaterPerPerson = dailyWaterPerPerson * 22;
@@ -23,15 +39,19 @@ const ComparisonSection = () => {
   const bottlesNeeded = Math.ceil(totalMonthlyWater / 19);
   const dispenserCost = bottlesNeeded * bottlePrice;
   const purifierTotalCost = totalMonthlyWater * purifierCost;
+
   const monthlySavings = Math.max(0, dispenserCost - purifierTotalCost);
   const savingsPercent = dispenserCost > 0 ? Math.round((monthlySavings / dispenserCost) * 100) : 0;
 
-  const formatOrDash = (val: number, opts?: Intl.NumberFormatOptions) => {
-    if (!teamSizeNum) return "—";
-    if (!isFinite(val)) return "—";
-    if (opts) return val.toLocaleString(undefined, opts);
+  const formatOrDash = (val: number) => {
+    if (!teamSizeNum || !isFinite(val)) return "—";
     return val.toLocaleString();
   };
+
+  // Цвета специально для читаемости в светлой теме
+  const mainTextColor = isLight ? "#04111f" : "#f0faff";
+  const secondaryTextColor = isLight ? "#1a4a6e" : "#9fc0d4";
+  const mutedTextColor = isLight ? "#456274" : "rgba(159,192,212,.5)";
 
   const whyItems = [
     {
@@ -69,7 +89,6 @@ const ComparisonSection = () => {
   return (
     <section className="pad" style={{ padding: isMobile ? '3rem 1rem' : undefined }}>
       <div className="wrap">
-
         {/* Заголовок */}
         <div style={{ textAlign: 'center', maxWidth: '560px', margin: isMobile ? '0 auto 3rem' : '0 auto 5rem' }} className="reveal">
           <span className="sec-tag">Калькулятор</span>
@@ -111,25 +130,23 @@ const ComparisonSection = () => {
             style={{
               width: '100%',
               padding: '1rem 1.4rem',
-              border: '1px solid rgba(0,200,255,.3)',
-              background: 'rgba(0,200,255,.06)',
               borderRadius: '10px',
               fontSize: isMobile ? '1rem' : '1.1rem',
-              color: '#f0faff',
+              color: isLight ? "#04111f" : "#f0faff",
+              background: isLight ? "rgba(255,255,255,0.95)" : "rgba(0,200,255,.06)",
+              border: isLight ? "1px solid rgba(0,60,120,0.3)" : "1px solid rgba(0,200,255,.3)",
               outline: 'none',
               transition: 'all .3s',
               fontFamily: "'Outfit',sans-serif",
               fontWeight: 500,
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(0,200,255,.5)';
-              e.currentTarget.style.background = 'rgba(0,200,255,.12)';
-              e.currentTarget.style.boxShadow = '0 0 24px rgba(0,200,255,.1)';
+              e.currentTarget.style.borderColor = isLight ? '#0077aa' : 'rgba(0,200,255,.5)';
+              e.currentTarget.style.background = isLight ? 'white' : 'rgba(0,200,255,.12)';
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(0,200,255,.3)';
-              e.currentTarget.style.background = 'rgba(0,200,255,.06)';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = isLight ? "rgba(0,60,120,0.3)" : "rgba(0,200,255,.3)";
+              e.currentTarget.style.background = isLight ? "rgba(255,255,255,0.95)" : "rgba(0,200,255,.06)";
             }}
           />
         </div>
@@ -147,7 +164,7 @@ const ComparisonSection = () => {
             padding: isMobile ? '1.5rem' : '2.4rem',
             borderRadius: '20px',
             border: '2px solid rgba(255,100,100,.3)',
-            background: 'rgba(255,100,100,.05)',
+            background: isLight ? 'rgba(255,100,100,.07)' : 'rgba(255,100,100,.05)',
             backdropFilter: 'blur(16px)',
             position: 'relative',
             opacity: teamSizeNum ? 1 : 0.6,
@@ -155,16 +172,17 @@ const ComparisonSection = () => {
             transition: 'all .4s',
           }}>
             <div style={{ position: 'absolute', top: '1rem', right: '1.2rem', color: '#ff6464', fontSize: '1.2rem' }}>✗</div>
-            <h3 style={{ fontSize: '1.4rem', fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 300, color: '#f0faff', marginBottom: '1.8rem' }}>
+            <h3 style={{ fontSize: '1.4rem', fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 300, color: mainTextColor, marginBottom: '1.8rem' }}>
               Диспенсер
             </h3>
+            {/* ... остальное содержимое карточки без изменений */}
             <div style={{ marginBottom: '1.6rem', paddingBottom: '1.6rem', borderBottom: '1px solid rgba(255,100,100,.15)' }}>
-              <p style={{ fontSize: '.7rem', color: 'rgba(159,192,212,.5)', marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Кол-во бутылей</p>
+              <p style={{ fontSize: '.7rem', color: mutedTextColor, marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Кол-во бутылей</p>
               <p style={{ fontSize: isMobile ? '1.6rem' : '2rem', fontWeight: 700, color: '#ff6464' }}>{formatOrDash(bottlesNeeded)}</p>
             </div>
             <div style={{ marginBottom: '1.6rem', paddingBottom: '1.6rem', borderBottom: '1px solid rgba(255,100,100,.15)' }}>
-              <p style={{ fontSize: '.7rem', color: 'rgba(159,192,212,.5)', marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Цена за литр</p>
-              <p style={{ fontSize: '1.3rem', fontWeight: 600, color: '#f0faff' }}>
+              <p style={{ fontSize: '.7rem', color: mutedTextColor, marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Цена за литр</p>
+              <p style={{ fontSize: '1.3rem', fontWeight: 600, color: mainTextColor }}>
                 {teamSizeNum ? `${dispenserPricePerLiter.toFixed(0)} ₸/л` : "—"}
               </p>
             </div>
@@ -174,7 +192,7 @@ const ComparisonSection = () => {
             </div>
           </div>
 
-          {/* ПУРИФАЙЕР */}
+          {/* ПУРИФАЙЕР — аналогично с mainTextColor */}
           <div style={{
             padding: isMobile ? '1.5rem' : '2.4rem',
             borderRadius: '20px',
@@ -187,16 +205,17 @@ const ComparisonSection = () => {
             boxShadow: (teamSizeNum && !isMobile) ? '0 0 40px rgba(0,229,204,.15)' : 'none',
           }}>
             <div style={{ position: 'absolute', top: '1rem', right: '1.2rem', color: '#00e5cc', fontSize: '1.2rem' }}>✓</div>
-            <h3 style={{ fontSize: '1.4rem', fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 300, color: '#f0faff', marginBottom: '1.8rem' }}>
+            <h3 style={{ fontSize: '1.4rem', fontFamily: "'Playfair Display',Georgia,serif", fontWeight: 300, color: mainTextColor, marginBottom: '1.8rem' }}>
               Пурифайер
             </h3>
+            {/* Остальные части карточки аналогично */}
             <div style={{ marginBottom: '1.6rem', paddingBottom: '1.6rem', borderBottom: '1px solid rgba(0,229,204,.15)' }}>
-              <p style={{ fontSize: '.7rem', color: 'rgba(159,192,212,.5)', marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Бутыли не нужны</p>
+              <p style={{ fontSize: '.7rem', color: mutedTextColor, marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Бутыли не нужны</p>
               <p style={{ fontSize: isMobile ? '1.6rem' : '2rem', fontWeight: 700, color: '#00e5cc' }}>0</p>
             </div>
             <div style={{ marginBottom: '1.6rem', paddingBottom: '1.6rem', borderBottom: '1px solid rgba(0,229,204,.15)' }}>
-              <p style={{ fontSize: '.7rem', color: 'rgba(159,192,212,.5)', marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Цена за литр</p>
-              <p style={{ fontSize: '1.3rem', fontWeight: 600, color: '#f0faff' }}>{purifierCost} ₸/л</p>
+              <p style={{ fontSize: '.7rem', color: mutedTextColor, marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.1em' }}>Цена за литр</p>
+              <p style={{ fontSize: '1.3rem', fontWeight: 600, color: mainTextColor }}>{purifierCost} ₸/л</p>
             </div>
             <div style={{ padding: '1.4rem', background: 'rgba(0,229,204,.12)', borderRadius: '12px', border: '1px solid rgba(0,229,204,.3)' }}>
               <p style={{ fontSize: '.7rem', color: '#00c8ff', marginBottom: '.6rem', textTransform: 'uppercase', letterSpacing: '.1em', fontWeight: 600 }}>Ежемесячно</p>
@@ -222,11 +241,11 @@ const ComparisonSection = () => {
             <p style={{ fontSize: isMobile ? '2.4rem' : '3.6rem', fontWeight: 800, color: '#00e5cc', marginBottom: '.6rem', lineHeight: 1 }}>
               {monthlySavings.toLocaleString()} ₸
             </p>
-            <p style={{ fontSize: isMobile ? '1rem' : '1.1rem', color: '#9fc0d4', marginBottom: '1.2rem' }}>
-              Это <strong style={{ color: '#00e5cc', fontSize: isMobile ? '1.1rem' : '1.3rem' }}>{savingsPercent}%</strong> экономии
+            <p style={{ fontSize: isMobile ? '1rem' : '1.1rem', color: secondaryTextColor, marginBottom: '1.2rem' }}>
+              Это <strong style={{ color: '#00e5cc' }}>{savingsPercent}%</strong> экономии
             </p>
-            <p style={{ fontSize: '.85rem', color: 'rgba(159,192,212,.8)', lineHeight: 1.8 }}>
-              При коллективе из <strong>{teamSizeNum}</strong> человек пурифайер дешевле на{' '}
+            <p style={{ fontSize: '.85rem', color: secondaryTextColor, lineHeight: 1.8 }}>
+              При коллективе из <strong style={{ color: mainTextColor }}>{teamSizeNum}</strong> человек пурифайер дешевле на{' '}
               <br />
               <strong style={{ color: '#00e5cc' }}>{(monthlySavings * 12).toLocaleString()} ₸ в год</strong>
             </p>
@@ -241,13 +260,12 @@ const ComparisonSection = () => {
               fontSize: isMobile ? '1.6rem' : '2.2rem',
               fontFamily: "'Playfair Display',Georgia,serif",
               fontWeight: 300,
-              color: '#f0faff',
+              color: mainTextColor,
               lineHeight: 1.2,
             }}>
               Почему пурифайер <em style={{ fontStyle: 'italic', color: '#00c8ff' }}>лучше</em>
             </h3>
           </div>
-
           <div style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
@@ -256,13 +274,16 @@ const ComparisonSection = () => {
             {whyItems.map((item, idx) => (
               <div key={idx} className="ben-card" style={{ padding: isMobile ? '1.6rem' : '2.2rem' }}>
                 <div className="ben-icon-wrap">{item.svg}</div>
-                <div className="ben-title" style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>{item.title}</div>
-                <p className="ben-text">{item.text}</p>
+                <div className="ben-title" style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: mainTextColor }}>
+                  {item.title}
+                </div>
+                <p className="ben-text" style={{ color: secondaryTextColor }}>
+                  {item.text}
+                </p>
               </div>
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );
