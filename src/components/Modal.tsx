@@ -15,37 +15,24 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
     };
 
     document.addEventListener("keydown", handleKey);
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
 
     return () => {
       document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.classList.remove("modal-open");
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const isLight =
-    document.documentElement.getAttribute("data-theme") === "light";
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="modal modal-box"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          className="modal-close"
-          onClick={onClose}
-        >
-          ✕
-        </button>
-
+    <div className="modal-overlay" onClick={onClose} style={{ isolation: "isolate" }}>
+      <div className="modal modal-box" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>✕</button>
         {children}
       </div>
     </div>
