@@ -77,7 +77,6 @@ export default function Footer() {
           <ul>
             <li><a href="#">О нас</a></li>
             <li><a href="#">Сертификаты</a></li>
-            <li><a href="#contact">Контакты</a></li>
             <li><a href="#">Рассчитать стоимость</a></li>
           </ul>
         </div>
