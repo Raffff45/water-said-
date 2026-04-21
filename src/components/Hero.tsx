@@ -47,7 +47,6 @@ export default function Hero() {
       setOpen(false);
       setName("");
       setPhone("");
-
     } catch (error) {
       alert("Ошибка отправки ❌");
       console.error(error);
@@ -77,26 +76,21 @@ export default function Hero() {
           </button>
 
           <button
-  className="btn-p"
-  onClick={() => {
-    const el = document.getElementById('products');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }}
->
-  Наши продукты
-</button>
+            className="btn-p"
+            onClick={() => {
+              const el = document.getElementById("products");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            Наши продукты
+          </button>
         </div>
       </div>
 
       <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <h2 style={title}>Оставить заявку</h2>
-        <p style={subtitle}>
-          Мы свяжемся с вами в течение 5 минут
-        </p>
+        <h2 className="modal-title">Оставить заявку</h2>
+        <p className="modal-subtitle">Мы свяжемся с вами в течение 5 минут</p>
 
-        {/* ФИО */}
         <input
           type="text"
           placeholder="Иванов Иван Иванович"
@@ -107,25 +101,17 @@ export default function Hero() {
               setName(value);
             }
           }}
-          style={inputStyle}
+          className="modal-input"
         />
 
-        {/* Телефон */}
         <input
           type="tel"
           placeholder="+7 (707) 730-68-46"
           value={phone}
           onChange={(e) => {
             let value = e.target.value.replace(/\D/g, "");
-
-            if (value.startsWith("8")) {
-              value = "7" + value.slice(1);
-            }
-
-            if (!value.startsWith("7")) {
-              value = "7" + value;
-            }
-
+            if (value.startsWith("8")) value = "7" + value.slice(1);
+            if (!value.startsWith("7")) value = "7" + value;
             value = value.slice(0, 11);
 
             let formatted = "+7";
@@ -136,10 +122,10 @@ export default function Hero() {
 
             setPhone(formatted);
           }}
-          style={inputStyle}
+          className="modal-input"
         />
 
-        <button onClick={handleSubmit} style={btnStyle}>
+        <button onClick={handleSubmit} className="modal-btn">
           Отправить заявку
         </button>
       </Modal>
@@ -151,38 +137,3 @@ export default function Hero() {
     </section>
   );
 }
-
-const title: React.CSSProperties = {
-  marginBottom: "6px",
-  fontSize: "24px",
-  fontWeight: 600,
-  color: "#00d4ff",
-};
-
-const subtitle: React.CSSProperties = {
-  marginBottom: "18px",
-  color: "#9fb3c8",
-  fontSize: "14px",
-};
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px",
-  marginBottom: "12px",
-  borderRadius: "10px",
-  border: "1px solid rgba(0, 200, 255, 0.2)",
-  background: "#081f33",
-  color: "#fff",
-  outline: "none",
-};
-
-const btnStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px",
-  borderRadius: "10px",
-  border: "none",
-  background: "linear-gradient(135deg, #00d4ff, #00aaff)",
-  color: "#001018",
-  fontWeight: 600,
-  cursor: "pointer",
-};

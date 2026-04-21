@@ -30,14 +30,18 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   if (!isOpen) return null;
 
+  const isLight =
+    document.documentElement.getAttribute("data-theme") === "light";
+
   return (
-    <div style={overlay} onClick={onClose}>
-      <div className="modal" style={modal} onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal modal-box"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
-          style={closeBtn}
+          className="modal-close"
           onClick={onClose}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#00c8ff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#aaa")}
         >
           ✕
         </button>
@@ -47,46 +51,3 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
     </div>
   );
 }
-
-/* === СТИЛИ === */
-
-const overlay: React.CSSProperties = {
-  position: "fixed",
-  inset: 0,
-  background: "rgba(5, 15, 30, 0.85)",
-  backdropFilter: "blur(10px)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 999,
-  animation: "fadeIn 0.25s ease",
-};
-
-const modal: React.CSSProperties = {
-  background: "linear-gradient(145deg, #061a2b, #0b2a44)",
-  padding: "30px",
-  borderRadius: "20px",
-  width: "100%",
-  maxWidth: "420px",
-  maxHeight: "80vh",
-  overflowY: "auto",
-  overflowX: "hidden",
-  position: "relative",
-  boxShadow: "0 25px 100px rgba(0, 200, 255, 0.2)",
-  border: "1px solid rgba(0, 200, 255, 0.2)",
-  color: "#fff",
-  animation: "scaleIn 0.25s ease",
-  transform: "translateY(0)",
-};
-
-const closeBtn: React.CSSProperties = {
-  position: "absolute",
-  top: "12px",
-  right: "14px",
-  border: "none",
-  background: "transparent",
-  color: "#aaa",
-  fontSize: "20px",
-  cursor: "pointer",
-  transition: "0.3s",
-};

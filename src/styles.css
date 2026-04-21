@@ -802,3 +802,137 @@ footer{
   border-color: rgba(0, 119, 170, 0.5);
   box-shadow: 0 0 20px rgba(0, 119, 170, 0.12);
 }
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+@keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.95) translateY(12px) } to { opacity: 1; transform: scale(1) translateY(0) } }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 15, 30, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-box {
+  background: linear-gradient(145deg, #061a2b, #0b2a44);
+  padding: 30px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  box-shadow: 0 25px 100px rgba(0, 200, 255, 0.2);
+  border: 1px solid rgba(0, 200, 255, 0.2);
+  color: var(--ice);
+  animation: scaleIn 0.25s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: none;
+  background: transparent;
+  color: var(--silver);
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.modal-close:hover { color: var(--cyan); }
+
+/* --- Light overrides --- */
+[data-theme="light"] .modal-overlay {
+  background: rgba(180, 215, 235, 0.6);
+}
+
+[data-theme="light"] .modal-box {
+  background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(224,242,252,0.98));
+  box-shadow: 0 25px 80px rgba(0, 119, 170, 0.18), 0 2px 0 rgba(0,119,170,0.12);
+  border: 1px solid rgba(0, 119, 170, 0.2);
+  color: var(--pearl);
+}
+
+[data-theme="light"] .modal-close {
+  color: rgba(0, 40, 80, 0.35);
+}
+[data-theme="light"] .modal-close:hover {
+  color: var(--cyan);
+}
+
+/* ============================================================
+   MODAL CONTENT (title, subtitle, input, button)
+   ============================================================ */
+.modal-title {
+  margin-bottom: 6px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.modal-subtitle {
+  margin-bottom: 18px;
+  color: var(--silver);
+  font-size: 14px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 200, 255, 0.2);
+  background: #081f33;
+  color: #fff;
+  outline: none;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  transition: border-color 0.3s, background 0.3s;
+}
+.modal-input::placeholder { color: rgba(255,255,255,0.3); }
+.modal-input:focus { border-color: rgba(0, 200, 255, 0.5); }
+
+.modal-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #00d4ff, #00aaff);
+  color: #001018;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.modal-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* --- Light overrides --- */
+[data-theme="light"] .modal-title {
+  color: var(--cyan);
+}
+
+[data-theme="light"] .modal-subtitle {
+  color: var(--silver);
+}
+
+[data-theme="light"] .modal-input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 119, 170, 0.25);
+  color: var(--pearl);
+}
+[data-theme="light"] .modal-input::placeholder {
+  color: rgba(0, 40, 80, 0.35);
+}
+[data-theme="light"] .modal-input:focus {
+  border-color: rgba(0, 119, 170, 0.55);
+}
