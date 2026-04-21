@@ -27,7 +27,7 @@ export default function ComparisonCards() {
           <h2 className="sec-h2">Будущее бесплатной<br /><em>воды</em></h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }} className="cmp-grid">
           {COLS.map(col => (
             <div key={col.label} className={`cmp-card${col.featured ? ' cmp-card--featured' : ''}`} style={{
               borderRadius: '1.25rem',

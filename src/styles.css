@@ -1213,3 +1213,21 @@ body.modal-open canvas {
   .modal-box { border-radius: 14px; max-height: 95vh; }
   .modal-img-block { height: 150px; }
 }
+@media (max-width: 600px) {
+  .modal-box [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Мобильная адаптация для Compare.tsx — только до 768px */
+@media (max-width: 768px) {
+  .cmp-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Поднимаем featured карточку наверх */
+  .cmp-card--featured {
+    order: -1;
+  }
+}
