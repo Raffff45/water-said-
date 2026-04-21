@@ -31,8 +31,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   return (
     <div className="modal-overlay" onClick={onClose} style={{ isolation: "isolate" }}>
-      <div className="modal modal-box" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>

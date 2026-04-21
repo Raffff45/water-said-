@@ -249,23 +249,23 @@ function Purifier3D() {
     const panelBorder = new THREE.Mesh(new THREE.BoxGeometry(1.63, 1.53, 0.06), new THREE.MeshStandardMaterial({ color: 0x1a2535, emissive: 0x001133, emissiveIntensity: 0.3, transparent: true, opacity: 0.8 }));
     panelBorder.position.set(0, 1.1, 0.62); g.add(panelBorder);
 
+    const textCanvas = document.createElement('canvas');
+    textCanvas.width = 512; textCanvas.height = 256;
+    const tc = textCanvas.getContext('2d')!;
+    tc.clearRect(0, 0, 512, 256);
+    tc.fillStyle = '#1a3a5c';
+    tc.font = 'bold 180px Arial';
+    tc.textAlign = 'center';
+    tc.textBaseline = 'middle';
+    tc.fillText('BAO', 256, 128);
+    const textTex = new THREE.CanvasTexture(textCanvas);
+    const textMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.5, 0.75),
+      new THREE.MeshStandardMaterial({ map: textTex, transparent: true, depthWrite: false })
+    );
+    textMesh.position.set(0, 0, 0.615);
+    g.add(textMesh);
 
-const textCanvas = document.createElement('canvas');
-textCanvas.width = 512; textCanvas.height = 256;
-const tc = textCanvas.getContext('2d')!;
-tc.clearRect(0, 0, 512, 256);
-tc.fillStyle = '#1a3a5c';
-tc.font = 'bold 180px Arial';
-tc.textAlign = 'center';
-tc.textBaseline = 'middle';
-tc.fillText('BAO', 256, 128);
-const textTex = new THREE.CanvasTexture(textCanvas);
-const textMesh = new THREE.Mesh(
-  new THREE.PlaneGeometry(1.5, 0.75),
-  new THREE.MeshStandardMaterial({ map: textTex, transparent: true, depthWrite: false })
-);
-textMesh.position.set(0, 0, 0.615);
-g.add(textMesh);
     const indicatorColors = [
       { x: -0.42, mat: redIndicator, col: 0xff2200 },
       { x: 0, mat: yellowIndicator, col: 0xddaa00 },
@@ -446,48 +446,109 @@ export default function Products() {
 
       {/* МОДАЛКА — ФОНТАНЧИК */}
       <Modal isOpen={modal === "fountain"} onClose={() => setModal(null)}>
-        <h2 className="modal-title">Питьевой фонтанчик</h2>
-        <p className="modal-subtitle">Надёжное решение для школ, ТРЦ и общественных пространств</p>
-
-        <div className="prod-modal-img-wrap">
-          <img
-            src="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room1.png"
-            alt="Питьевой фонтанчик в интерьере"
-            className="prod-modal-img"
-          />
+        <div className="modal-header-bar">
+          <div className="modal-header-left">
+            <div className="modal-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-5.5 8-12a8 8 0 1 0-16 0c0 6.5 8 12 8 12z"/>
+                <circle cx="12" cy="10" r="2.5"/>
+              </svg>
+            </div>
+            <div>
+              <span className="modal-eyebrow">Продукт 01</span>
+              <h2 className="modal-title">Питьевой фонтанчик</h2>
+            </div>
+          </div>
+          <button className="modal-close-btn" onClick={() => setModal(null)}>✕</button>
         </div>
 
-        <ul className="prod-modal-list">
-          <li><span className="prod-modal-check">✔</span>Бесконтактный ИК-датчик — без прикосновений</li>
-          <li><span className="prod-modal-check">✔</span>Охлаждение воды до +7°C</li>
-          <li><span className="prod-modal-check">✔</span>Вандалоустойчивый корпус из нержавеющей стали</li>
-          <li><span className="prod-modal-check">✔</span>До 600 литров в сутки</li>
-          <li><span className="prod-modal-check">✔</span>Фильтрация по стандартам ВОЗ и СанПиН</li>
-          <li><span className="prod-modal-check">✔</span>Установка за 1 день, обслуживание включено</li>
-        </ul>
+        <div className="modal-body">
+          <div className="modal-img-block">
+            <img
+              src="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room1.png"
+              alt="Питьевой фонтанчик"
+              className="modal-img"
+            />
+            <div className="modal-img-badge">Для общественных мест</div>
+          </div>
+
+          <div className="modal-specs-grid">
+            {[
+              { icon: "📡", text: "Бесконтактный ИК-датчик" },
+              { icon: "❄️", text: "Охлаждение до +7°C" },
+              { icon: "🔩", text: "Нержавеющая сталь" },
+              { icon: "💧", text: "До 600 л/сутки" },
+              { icon: "✅", text: "Стандарты ВОЗ и СанПиН" },
+              { icon: "🔧", text: "Установка за 1 день" },
+            ].map((s, i) => (
+              <div className="modal-spec-item" key={i}>
+                <span className="modal-spec-icon">{s.icon}</span>
+                <span className="modal-spec-text">{s.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="modal-footer">
+            <a href="#contact" className="modal-btn-primary" onClick={() => setModal(null)}>
+              Оставить заявку
+            </a>
+            <button className="modal-btn-ghost" onClick={() => setModal(null)}>Закрыть</button>
+          </div>
+        </div>
       </Modal>
 
       {/* МОДАЛКА — ПУРИФИКАТОР */}
       <Modal isOpen={modal === "purifier"} onClose={() => setModal(null)}>
-        <h2 className="modal-title">Пурификатор воды</h2>
-        <p className="modal-subtitle">Идеальное решение для офисов, клиник и учебных заведений</p>
-
-        <div className="prod-modal-img-wrap">
-          <img
-            src="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room2.png"
-            alt="Пурификатор воды в интерьере"
-            className="prod-modal-img"
-          />
+        <div className="modal-header-bar">
+          <div className="modal-header-left">
+            <div className="modal-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 2h8l1 7H7L8 2z"/>
+                <path d="M7 9c0 6 2 9 5 13 3-4 5-7 5-13"/>
+                <line x1="12" y1="9" x2="12" y2="22"/>
+              </svg>
+            </div>
+            <div>
+              <span className="modal-eyebrow">Продукт 02</span>
+              <h2 className="modal-title">Пурификатор воды</h2>
+            </div>
+          </div>
+          <button className="modal-close-btn" onClick={() => setModal(null)}>✕</button>
         </div>
 
-        <ul className="prod-modal-list">
-          <li><span className="prod-modal-check">✔</span>3 температуры: горячая, нормальная, холодная</li>
-          <li><span className="prod-modal-check">✔</span>Система обратного осмоса — 99.97% очистки</li>
-          <li><span className="prod-modal-check">✔</span>УФ-стерилизация для уничтожения бактерий</li>
-          <li><span className="prod-modal-check">✔</span>LED-индикация состояния фильтров</li>
-          <li><span className="prod-modal-check">✔</span>Элегантный белый корпус, напольный монтаж</li>
-          <li><span className="prod-modal-check">✔</span>Установка за 1 день, обслуживание включено</li>
-        </ul>
+        <div className="modal-body">
+          <div className="modal-img-block">
+            <img
+              src="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room2.png"
+              alt="Пурификатор воды"
+              className="modal-img"
+            />
+            <div className="modal-img-badge">Для офисов и кухонь</div>
+          </div>
+
+          <div className="modal-specs-grid">
+            {[
+              { icon: "🌡️", text: "Горячая / Норм / Холодная" },
+              { icon: "🔬", text: "Обратный осмос — 99.97%" },
+              { icon: "☀️", text: "УФ-стерилизация" },
+              { icon: "💡", text: "LED-индикация фильтров" },
+              { icon: "🏢", text: "Элегантный белый корпус" },
+              { icon: "🔧", text: "Установка за 1 день" },
+            ].map((s, i) => (
+              <div className="modal-spec-item" key={i}>
+                <span className="modal-spec-icon">{s.icon}</span>
+                <span className="modal-spec-text">{s.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="modal-footer">
+            <a href="#contact" className="modal-btn-primary" onClick={() => setModal(null)}>
+              Оставить заявку
+            </a>
+            <button className="modal-btn-ghost" onClick={() => setModal(null)}>Закрыть</button>
+          </div>
+        </div>
       </Modal>
     </section>
   );
