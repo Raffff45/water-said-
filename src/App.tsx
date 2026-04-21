@@ -30,9 +30,9 @@ function App() {
       <div className="divider"></div>
       <Products />
       <div className="divider"></div>
-      <HowItWorks />
-      <div className="divider"></div>
       <Benefits />
+      <div className="divider"></div>
+      <HowItWorks />
       <div className="divider"></div>
       <Installation />
       <div className="divider"></div>
