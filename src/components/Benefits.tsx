@@ -77,9 +77,9 @@ export default function Benefits() {
       const scrollingUp   = e.deltaY < 0;
 
       // Section hasn't reached top yet — let normal scroll happen,
-      // but if it's close (within 80px) snap it into place when scrolling down
+      // but if it's close (within 200px) snap it into place when scrolling down
       if (rect.top > 1) {
-        if (scrollingDown && rect.top < 80 && !snappedRef.current) {
+        if (scrollingDown && rect.top < 200 && !snappedRef.current) {
           e.preventDefault();
           snappedRef.current = true;
           snapToSection();
@@ -106,11 +106,13 @@ export default function Benefits() {
         return;
       }
 
+      // ALWAYS block the scroll event — no matter how fast the wheel spins
       e.preventDefault();
 
+      // But only switch card once per cooldown
       if (cooldownRef.current) return;
       cooldownRef.current = true;
-      setTimeout(() => { cooldownRef.current = false; }, 600);
+      setTimeout(() => { cooldownRef.current = false; }, 550);
 
       goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
     };
@@ -307,9 +309,9 @@ function arrowBtn(side: 'left' | 'right', disabled: boolean): React.CSSPropertie
     width: '44px',
     height: '44px',
     borderRadius: '50%',
-    border: '1px solid rgba(255,255,255,0.12)',
-    background: 'rgba(255,255,255,0.06)',
-    color: disabled ? 'rgba(255,255,255,0.15)' : '#fff',
+    border: '1.5px solid currentColor',
+    background: 'transparent',
+    color: 'inherit',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -317,6 +319,6 @@ function arrowBtn(side: 'left' | 'right', disabled: boolean): React.CSSPropertie
     backdropFilter: 'blur(8px)',
     transition: 'all 0.2s',
     zIndex: 10,
-    opacity: disabled ? 0.3 : 1,
+    opacity: disabled ? 0.2 : 0.7,
   };
 }
