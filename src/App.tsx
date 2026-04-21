@@ -16,7 +16,6 @@ import Footer from './components/Footer';
 import { useCustomCursor } from './hooks/useCustomCursor';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import ComparisonSection from './components/BenefitCalculator';
-import PurifierBenefit from './components/PurifierBenefit';
 
 function App() {
   useCustomCursor();
@@ -40,8 +39,6 @@ function App() {
       <Clients />
       <div className="divider"></div>
       <ComparisonSection/>
-      <div className="divider"></div>
-      <PurifierBenefit/>
       <div className="divider"></div>
       <Compare />
       <div className="divider"></div>
