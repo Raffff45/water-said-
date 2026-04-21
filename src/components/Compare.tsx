@@ -1,111 +1,89 @@
-import { useState, useEffect } from "react";
+import React from 'react';
 
-export default function Compare() {
-  const [isMobile, setIsMobile] = useState(false);
+const DATA = [
+  { criterion: 'Стоимость / 100 чел. в год', us: 'от 60 000 ₸', bottle: '400 000+ ₸', cooler: '180 000 ₸', usGood: true, bottleGood: false, coolerGood: false },
+  { criterion: 'Качество очистки',            us: 'ВОЗ, СанПиН',  bottle: 'Непостоянное', cooler: 'Базовое',    usGood: true, bottleGood: false, coolerGood: false },
+  { criterion: 'Вода 24/7',                   us: '✓ Да',         bottle: '✗ По запасам', cooler: 'Частично',   usGood: true, bottleGood: false, coolerGood: false },
+  { criterion: 'Пластиковые отходы',          us: 'Нет',          bottle: '40 000+ бут.', cooler: 'Есть',       usGood: true, bottleGood: false, coolerGood: false },
+  { criterion: 'Техобслуживание',             us: '✓ Включено',   bottle: '—',            cooler: 'Не включено',usGood: true, bottleGood: false, coolerGood: false },
+  { criterion: 'Срок установки',              us: '1 день',       bottle: 'Пост. доставки',cooler: '2–3 дня',   usGood: true, bottleGood: false, coolerGood: false },
+  { criterion: 'Гарантия качества',           us: '✓ Лаб. контроль', bottle: '✗ Нет',    cooler: '✗ Нет',      usGood: true, bottleGood: false, coolerGood: false },
+];
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+const C = { us: 'var(--cyan)', bottle: '#ff6b6b', cooler: 'var(--silver)' };
 
+const COLS = [
+  { label: 'Вода для всех', color: C.us,     valueKey: 'us' as const,     goodKey: 'usGood' as const,     featured: true  },
+  { label: 'Бутилированная',color: C.bottle,  valueKey: 'bottle' as const, goodKey: 'bottleGood' as const, featured: false },
+  { label: 'Только кулер',  color: C.cooler,  valueKey: 'cooler' as const, goodKey: 'coolerGood' as const, featured: false },
+];
+
+export default function ComparisonCards() {
   return (
-    <section className="pad" style={{ padding: isMobile ? '3rem 1rem' : undefined }}>
-      <div className="wrap reveal">
-        <div style={{ 
-          textAlign: 'center', 
-          maxWidth: '560px', 
-          margin: isMobile ? '0 auto 2.5rem' : '0 auto 4rem' 
-        }}>
+    <section className="pad">
+      <div className="wrap">
+        <div style={{ textAlign: 'center', maxWidth: '560px', margin: '0 auto 3rem' }}>
           <span className="sec-tag">Сравнение</span>
-          <h2 className="sec-h2" style={{ fontSize: isMobile ? '1.8rem' : undefined }}>
-            Мы против
-            <br />
-            <em>бутилированной</em> воды
-          </h2>
+          <h2 className="sec-h2">Будущее бесплатной<br /><em>воды</em></h2>
         </div>
 
-        {/* Контейнер для адаптации таблицы */}
-        <div style={{
-          width: '100%',
-          overflowX: isMobile ? 'auto' : 'visible',
-          WebkitOverflowScrolling: 'touch', // плавный скролл на iOS
-          paddingBottom: isMobile ? '1rem' : '0'
-        }}>
-          <table className="cmp-table" style={{ 
-            width: '100%', 
-            minWidth: isMobile ? '650px' : 'auto', // предотвращает сжатие колонок на мобилках
-            borderCollapse: 'collapse'
-          }}>
-            <thead>
-              <tr>
-                <th style={{ fontSize: isMobile ? '.85rem' : undefined }}>Критерий</th>
-                <th style={{ fontSize: isMobile ? '.85rem' : undefined }}>Вода для всех</th>
-                <th style={{ fontSize: isMobile ? '.85rem' : undefined }}>Бутилированная</th>
-                <th style={{ fontSize: isMobile ? '.85rem' : undefined }}>Только кулер</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="cmp-ours">
-                <td>Стоимость / 100 чел. в год</td>
-                <td className="hi">от 60 000 ₸</td>
-                <td className="lo">400 000+ ₸</td>
-                <td>180 000 ₸</td>
-              </tr>
-              <tr>
-                <td>Качество очистки</td>
-                <td className="hi">ВОЗ, СанПиН</td>
-                <td>Непостоянное</td>
-                <td>Базовое</td>
-              </tr>
-              <tr>
-                <td>Вода 24/7</td>
-                <td className="hi">✓ Да</td>
-                <td className="lo">✗ По запасам</td>
-                <td>Частично</td>
-              </tr>
-              <tr>
-                <td>Пластиковые отходы</td>
-                <td className="hi">Нет</td>
-                <td className="lo">40 000+ бутылок</td>
-                <td>Есть</td>
-              </tr>
-              <tr>
-                <td>Техобслуживание</td>
-                <td className="hi">✓ Включено</td>
-                <td className="lo">—</td>
-                <td className="lo">Не включено</td>
-              </tr>
-              <tr>
-                <td>Срок установки</td>
-                <td className="hi">1 день</td>
-                <td className="lo">Постоянные доставки</td>
-                <td>2–3 дня</td>
-              </tr>
-              <tr>
-                <td>Гарантия качества</td>
-                <td className="hi">✓ Лаб. контроль</td>
-                <td className="lo">✗ Нет</td>
-                <td className="lo">✗ Нет</td>
-              </tr>
-            </tbody>
-          </table>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
+          {COLS.map(col => (
+            <div key={col.label} className={`cmp-card${col.featured ? ' cmp-card--featured' : ''}`} style={{
+              borderRadius: '1.25rem',
+              border: col.featured
+                ? '1px solid var(--cmp-featured-border)'
+                : '1px solid var(--border2)',
+              background: col.featured
+                ? 'var(--cmp-featured-bg)'
+                : 'var(--glass2)',
+              padding: '2rem 1.5rem',
+              position: 'relative',
+              boxShadow: col.featured ? 'var(--cmp-featured-shadow)' : 'none',
+            }}>
+              {col.featured && (
+                <div style={{
+                  position: 'absolute', top: '-13px', left: '50%', transform: 'translateX(-50%)',
+                  background: 'var(--cyan)', color: 'var(--ink)', fontSize: '0.62rem', fontWeight: 700,
+                  letterSpacing: '0.14em', padding: '4px 14px', borderRadius: '20px',
+                  textTransform: 'uppercase', whiteSpace: 'nowrap',
+                }}>★ Лучший выбор</div>
+              )}
+
+              <div style={{
+                color: col.color, fontWeight: 700, fontSize: '0.8rem',
+                letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.5rem',
+              }}>{col.label}</div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {DATA.map((d, i) => {
+                  const val = d[col.valueKey];
+                  const good = d[col.goodKey];
+                  return (
+                    <div key={i} style={{
+                      borderBottom: '1px solid var(--cmp-divider)',
+                      paddingBottom: '1rem',
+                    }}>
+                      <div style={{
+                        fontSize: '0.67rem',
+                        color: 'var(--cmp-label)',
+                        marginBottom: '4px',
+                        letterSpacing: '0.04em',
+                      }}>
+                        {d.criterion}
+                      </div>
+                      <div style={{
+                        fontSize: '0.88rem',
+                        color: good ? col.color : 'var(--cmp-neutral)',
+                        fontWeight: col.featured ? 600 : 400,
+                      }}>{val}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
-        
-        {/* Маленькая подсказка для пользователя на мобилке (опционально) */}
-        {isMobile && (
-          <div style={{ 
-            textAlign: 'center', 
-            fontSize: '0.7rem', 
-            color: 'rgba(159,192,212,0.4)', 
-            marginTop: '0.5rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em'
-          }}>
-            Листайте таблицу вправо →
-          </div>
-        )}
       </div>
     </section>
   );
