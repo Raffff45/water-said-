@@ -26,23 +26,13 @@ function Fountain3D() {
 
     scene.add(new THREE.AmbientLight(0xd8e4ec, 1.8));
     const key = new THREE.DirectionalLight(0xffffff, 4.0);
-    key.position.set(5, 10, 7);
-    key.castShadow = true;
-    key.shadow.mapSize.width = 2048;
-    key.shadow.mapSize.height = 2048;
+    key.position.set(5, 10, 7); key.castShadow = true;
+    key.shadow.mapSize.width = 2048; key.shadow.mapSize.height = 2048;
     scene.add(key);
-    const fill = new THREE.DirectionalLight(0x9ab0cc, 2.0);
-    fill.position.set(-6, 3, -4);
-    scene.add(fill);
-    const top = new THREE.DirectionalLight(0xeef4ff, 2.5);
-    top.position.set(0, 12, 2);
-    scene.add(top);
-    const rim = new THREE.DirectionalLight(0xfff8ee, 1.8);
-    rim.position.set(3, 4, 8);
-    scene.add(rim);
-    const bowlGlow = new THREE.PointLight(0xaaddff, 4.0, 3.5);
-    bowlGlow.position.set(0.15, 2.35, 0.6);
-    scene.add(bowlGlow);
+    const fill = new THREE.DirectionalLight(0x9ab0cc, 2.0); fill.position.set(-6, 3, -4); scene.add(fill);
+    const top = new THREE.DirectionalLight(0xeef4ff, 2.5); top.position.set(0, 12, 2); scene.add(top);
+    const rim = new THREE.DirectionalLight(0xfff8ee, 1.8); rim.position.set(3, 4, 8); scene.add(rim);
+    const bowlGlow = new THREE.PointLight(0xaaddff, 4.0, 3.5); bowlGlow.position.set(0.15, 2.35, 0.6); scene.add(bowlGlow);
 
     const bodyMat = new THREE.MeshStandardMaterial({ color: 0xb8cad4, metalness: 0.82, roughness: 0.22 });
     const topPlateMat = new THREE.MeshStandardMaterial({ color: 0xc5d5de, metalness: 0.88, roughness: 0.14 });
@@ -57,8 +47,7 @@ function Fountain3D() {
     scene.add(g);
 
     const body = new THREE.Mesh(new THREE.BoxGeometry(1.55, 3.4, 1.55), bodyMat);
-    body.position.y = -0.35; body.castShadow = true; body.receiveShadow = true;
-    g.add(body);
+    body.position.y = -0.35; body.castShadow = true; body.receiveShadow = true; g.add(body);
 
     ([ [-0.775, 0.775], [0.775, 0.775], [-0.775, -0.775], [0.775, -0.775] ] as [number,number][]).forEach(([x, z]) => {
       const e = new THREE.Mesh(new THREE.BoxGeometry(0.03, 3.42, 0.03), topPlateMat);
@@ -220,12 +209,9 @@ function Purifier3D() {
     scene.add(new THREE.AmbientLight(0xffffff, 2.0));
     const key = new THREE.DirectionalLight(0xffffff, 3.0);
     key.position.set(4, 8, 6); key.castShadow = true; scene.add(key);
-    const fill = new THREE.DirectionalLight(0xddeeff, 1.5);
-    fill.position.set(-5, 2, -3); scene.add(fill);
-    const top = new THREE.DirectionalLight(0xffffff, 1.8);
-    top.position.set(0, 10, 0); scene.add(top);
-    const panelL = new THREE.PointLight(0x0088cc, 1.8, 6);
-    panelL.position.set(0, 1.0, 3); scene.add(panelL);
+    const fill = new THREE.DirectionalLight(0xddeeff, 1.5); fill.position.set(-5, 2, -3); scene.add(fill);
+    const top = new THREE.DirectionalLight(0xffffff, 1.8); top.position.set(0, 10, 0); scene.add(top);
+    const panelL = new THREE.PointLight(0x0088cc, 1.8, 6); panelL.position.set(0, 1.0, 3); scene.add(panelL);
 
     const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf0f2f4, metalness: 0.05, roughness: 0.35 });
     const blackMat = new THREE.MeshStandardMaterial({ color: 0x0d1318, metalness: 0.3, roughness: 0.25 });
@@ -369,6 +355,206 @@ function Purifier3D() {
   return <canvas ref={canvasRef} id="p3d"></canvas>;
 }
 
+// ─── SVG иконки ───────────────────────────────────────────────────────────────
+
+const icons: Record<string, JSX.Element> = {
+  ir:       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>,
+  snow:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 7l-5 5-5-5"/><path d="M17 17l-5-5-5 5"/><path d="M2 12h20"/><path d="M7 7l-5 5 5 5"/><path d="M17 7l5 5-5 5"/></svg>,
+  shield:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  drop:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>,
+  check:    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+  wrench:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>,
+  temp:     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>,
+  filter:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+  sun:      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
+  led:      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/></svg>,
+  building: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+};
+
+// ─── типы ─────────────────────────────────────────────────────────────────────
+
+interface SpecItem {
+  iconKey: string;
+  title: string;
+  sub: string;
+}
+
+interface ModalContentProps {
+  eyebrow: string;
+  title: string;
+  description: string;
+  badge: string;
+  imgSrc: string;
+  imgAlt: string;
+  specs: SpecItem[];
+  contactHref: string;
+  pdfPath: string;
+  onClose: () => void;
+}
+
+// ─── модалка с поддержкой тем ─────────────────────────────────────────────────
+
+function ProductModalContent({
+  eyebrow, title, description, badge,
+  imgSrc, imgAlt, specs,
+  contactHref, pdfPath, onClose,
+}: ModalContentProps) {
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+
+  const bg           = isLight ? "#f0f8ff"               : "#0c1c2e";
+  const footerBg     = isLight ? "#e8f4ff"               : "#0a1826";
+  const titleColor   = isLight ? "#04111f"               : "#ffffff";
+  const descColor    = isLight ? "rgba(20,60,100,0.7)"   : "rgba(170,205,228,0.75)";
+  const eyebrowBg    = isLight ? "rgba(0,80,160,0.12)"   : "rgba(255,255,255,0.13)";
+  const eyebrowColor = isLight ? "#0a3a6e"               : "#ffffff";
+  const closeBg      = isLight ? "rgba(0,60,120,0.1)"    : "rgba(255,255,255,0.1)";
+  const closeColor   = isLight ? "rgba(0,40,80,0.6)"     : "rgba(255,255,255,0.75)";
+  const divider      = isLight ? "rgba(0,80,160,0.1)"    : "rgba(255,255,255,0.07)";
+  const iconBg       = isLight ? "rgba(0,100,200,0.12)"  : "rgba(30,100,200,0.25)";
+  const iconBorder   = isLight ? "rgba(0,120,220,0.35)"  : "rgba(80,150,230,0.6)";
+  const iconColor    = isLight ? "#0066bb"               : "#7ec8f0";
+  const specTitle    = isLight ? "#0a2540"               : "#ddeeff";
+  const specSub      = isLight ? "rgba(20,60,100,0.55)"  : "rgba(140,185,215,0.65)";
+  const ghostBg      = isLight ? "rgba(0,60,120,0.07)"   : "rgba(255,255,255,0.04)";
+  const ghostBorder  = isLight ? "rgba(0,80,160,0.2)"    : "rgba(255,255,255,0.13)";
+  const ghostColor   = isLight ? "rgba(10,50,100,0.8)"   : "rgba(195,222,242,0.85)";
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", borderRadius: "16px", overflow: "hidden", background: bg }}>
+
+      {/* MAIN ROW */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+
+        {/* LEFT */}
+        <div style={{ padding: "2rem 2rem 1.6rem", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{
+              fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase",
+              color: eyebrowColor, background: eyebrowBg,
+              padding: "4px 13px", borderRadius: "20px", fontWeight: 500,
+            }}>
+              {eyebrow}
+            </span>
+            <button onClick={onClose} style={{
+              width: "32px", height: "32px", borderRadius: "50%",
+              background: closeBg, border: "none", color: closeColor,
+              fontSize: "15px", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+            }}>✕</button>
+          </div>
+
+          <div>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: "2rem", fontWeight: 400, color: titleColor, margin: "0 0 0.6rem", lineHeight: 1.15 }}>
+              {title}
+            </h2>
+            <p style={{ fontSize: "13.5px", color: descColor, lineHeight: 1.7, margin: 0 }}>
+              {description}
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem 1.2rem" }}>
+            {specs.map((s, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
+                <div style={{
+                  width: "38px", height: "38px", borderRadius: "50%", flexShrink: 0,
+                  background: iconBg, border: `1.5px solid ${iconBorder}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: iconColor,
+                }}>
+                  {icons[s.iconKey]}
+                </div>
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 600, color: specTitle, lineHeight: 1.3 }}>
+                    {s.title}
+                  </div>
+                  <div style={{ fontSize: "11.5px", color: specSub, marginTop: "3px", lineHeight: 1.45 }}>
+                    {s.sub}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ height: "1px", background: divider, marginTop: "auto" }} />
+        </div>
+
+        {/* RIGHT — фото */}
+        <div style={{ position: "relative", overflow: "hidden", minHeight: "460px" }}>
+          <img src={imgSrc} alt={imgAlt} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{
+            position: "absolute", bottom: "14px", left: "14px",
+            fontSize: "12px", padding: "5px 14px", borderRadius: "20px",
+            background: "rgba(8,18,34,0.72)", color: "rgba(255,255,255,0.9)",
+            border: "1px solid rgba(255,255,255,0.14)", backdropFilter: "blur(8px)",
+          }}>
+            {badge}
+          </div>
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <div style={{
+        display: "grid", gridTemplateColumns: "1fr 1fr",
+        gap: "12px", padding: "14px 16px 16px",
+        borderTop: `1px solid ${divider}`,
+        background: footerBg,
+      }}>
+        <a href={contactHref} onClick={onClose} style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "9px",
+          padding: "15px", borderRadius: "10px",
+          background: "linear-gradient(135deg, #2272d8, #1a5bbf)",
+          color: "#fff", textDecoration: "none", fontWeight: 500, fontSize: "15px",
+          boxShadow: "0 4px 22px rgba(30,100,210,0.35)",
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+          </svg>
+          Оставить заявку
+        </a>
+        <button onClick={() => window.open(pdfPath, "_blank")} style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "9px",
+          padding: "15px", borderRadius: "10px",
+          background: ghostBg, border: `1px solid ${ghostBorder}`,
+          color: ghostColor, fontSize: "15px", cursor: "pointer", fontWeight: 400,
+          fontFamily: "var(--sans)",
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <polyline points="9 15 12 18 15 15"/>
+          </svg>
+          Скачать спецификацию
+        </button>
+      </div>
+
+    </div>
+  );
+}
+
+// ─── данные ───────────────────────────────────────────────────────────────────
+
+const fountainSpecs: SpecItem[] = [
+  { iconKey: "ir",     title: "Бесконтактный ИК-датчик", sub: "Гигиеничное использование" },
+  { iconKey: "snow",   title: "Охлаждение до +7°C",      sub: "Комфортная прохладная вода" },
+  { iconKey: "shield", title: "Нержавеющая сталь",        sub: "Прочный корпус и долговечность" },
+  { iconKey: "drop",   title: "До 600 л/сутки",           sub: "Высокая производительность" },
+  { iconKey: "check",  title: "Стандарты ВОЗ и СанПиН",  sub: "Безопасность и качество" },
+  { iconKey: "wrench", title: "Установка за 1 день",      sub: "Быстрый монтаж и запуск" },
+];
+
+const purifierSpecs: SpecItem[] = [
+  { iconKey: "temp",     title: "Горячая / Норм / Холодная", sub: "Три температурных режима" },
+  { iconKey: "filter",   title: "Обратный осмос — 99.97%",   sub: "Глубокая очистка воды" },
+  { iconKey: "sun",      title: "УФ-стерилизация",           sub: "Уничтожение бактерий и вирусов" },
+  { iconKey: "led",      title: "LED-индикация фильтров",     sub: "Контроль состояния фильтров" },
+  { iconKey: "building", title: "Элегантный белый корпус",    sub: "Впишется в любой интерьер" },
+  { iconKey: "wrench",   title: "Установка за 1 день",        sub: "Быстрый монтаж и запуск" },
+];
+
+// ─── главный компонент ────────────────────────────────────────────────────────
+
 export default function Products() {
   const [modal, setModal] = useState<string | null>(null);
 
@@ -446,110 +632,36 @@ export default function Products() {
 
       {/* МОДАЛКА — ФОНТАНЧИК */}
       <Modal isOpen={modal === "fountain"} onClose={() => setModal(null)}>
-        <div className="modal-header-bar">
-          <div className="modal-header-left">
-            <div className="modal-icon-wrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22s8-5.5 8-12a8 8 0 1 0-16 0c0 6.5 8 12 8 12z"/>
-                <circle cx="12" cy="10" r="2.5"/>
-              </svg>
-            </div>
-            <div>
-              <span className="modal-eyebrow">Продукт 01</span>
-              <h2 className="modal-title">Питьевой фонтанчик</h2>
-            </div>
-          </div>
-          <button className="modal-close-btn" onClick={() => setModal(null)}>✕</button>
-        </div>
-
-        <div className="modal-body">
-          <div className="modal-img-block">
-            <img
-              src="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room1.png"
-              alt="Питьевой фонтанчик"
-              className="modal-img"
-            />
-            <div className="modal-img-badge">Для общественных мест</div>
-          </div>
-
-          <div className="modal-specs-grid">
-            {[
-              { icon: "📡", text: "Бесконтактный ИК-датчик" },
-              { icon: "❄️", text: "Охлаждение до +7°C" },
-              { icon: "🔩", text: "Нержавеющая сталь" },
-              { icon: "💧", text: "До 600 л/сутки" },
-              { icon: "✅", text: "Стандарты ВОЗ и СанПиН" },
-              { icon: "🔧", text: "Установка за 1 день" },
-            ].map((s, i) => (
-              <div className="modal-spec-item" key={i}>
-                <span className="modal-spec-icon">{s.icon}</span>
-                <span className="modal-spec-text">{s.text}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="modal-footer">
-            <a href="#contact" className="modal-btn-primary" onClick={() => setModal(null)}>
-              Оставить заявку
-            </a>
-            <button className="modal-btn-ghost" onClick={() => setModal(null)}>Закрыть</button>
-          </div>
-        </div>
+        <ProductModalContent
+          eyebrow="Продукт 01"
+          title="Питьевой фонтанчик"
+          description="Компактный и надёжный питьевой фонтанчик для общественных мест и офисных помещений."
+          badge="Для общественных мест"
+          imgSrc="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room1.png"
+          imgAlt="Питьевой фонтанчик"
+          specs={fountainSpecs}
+          contactHref="#contact"
+          pdfPath="/spec-fountain.pdf"
+          onClose={() => setModal(null)}
+        />
       </Modal>
 
       {/* МОДАЛКА — ПУРИФИКАТОР */}
       <Modal isOpen={modal === "purifier"} onClose={() => setModal(null)}>
-        <div className="modal-header-bar">
-          <div className="modal-header-left">
-            <div className="modal-icon-wrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M8 2h8l1 7H7L8 2z"/>
-                <path d="M7 9c0 6 2 9 5 13 3-4 5-7 5-13"/>
-                <line x1="12" y1="9" x2="12" y2="22"/>
-              </svg>
-            </div>
-            <div>
-              <span className="modal-eyebrow">Продукт 02</span>
-              <h2 className="modal-title">Пурификатор воды</h2>
-            </div>
-          </div>
-          <button className="modal-close-btn" onClick={() => setModal(null)}>✕</button>
-        </div>
-
-        <div className="modal-body">
-          <div className="modal-img-block">
-            <img
-              src="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room2.png"
-              alt="Пурификатор воды"
-              className="modal-img"
-            />
-            <div className="modal-img-badge">Для офисов и кухонь</div>
-          </div>
-
-          <div className="modal-specs-grid">
-            {[
-              { icon: "🌡️", text: "Горячая / Норм / Холодная" },
-              { icon: "🔬", text: "Обратный осмос — 99.97%" },
-              { icon: "☀️", text: "УФ-стерилизация" },
-              { icon: "💡", text: "LED-индикация фильтров" },
-              { icon: "🏢", text: "Элегантный белый корпус" },
-              { icon: "🔧", text: "Установка за 1 день" },
-            ].map((s, i) => (
-              <div className="modal-spec-item" key={i}>
-                <span className="modal-spec-icon">{s.icon}</span>
-                <span className="modal-spec-text">{s.text}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="modal-footer">
-            <a href="#contact" className="modal-btn-primary" onClick={() => setModal(null)}>
-              Оставить заявку
-            </a>
-            <button className="modal-btn-ghost" onClick={() => setModal(null)}>Закрыть</button>
-          </div>
-        </div>
+        <ProductModalContent
+          eyebrow="Продукт 02"
+          title="Пурификатор воды"
+          description="Элегантная система очистки воды для офисов, кухонь и переговорных комнат."
+          badge="Для офисов и кухонь"
+          imgSrc="https://dpbyblauovgdabyyrfai.supabase.co/storage/v1/object/public/images/room2.png"
+          imgAlt="Пурификатор воды"
+          specs={purifierSpecs}
+          contactHref="#contact"
+          pdfPath="/spec-purifier.pdf"
+          onClose={() => setModal(null)}
+        />
       </Modal>
+
     </section>
   );
 }
