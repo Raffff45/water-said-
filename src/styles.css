@@ -1194,7 +1194,7 @@ body.modal-open canvas {
 /* ─── MOBILE ─── */
 @media (max-width: 480px) {
   .modal-specs-grid { grid-template-columns: 1fr; }
-  .modal-box { border-radius: 14px; max-height: 95vh; }
+  .modal-box { border-radius: 14px; max-height: 85vh; }
   .modal-img-block { height: 150px; }
 }
 @media (max-width: 600px) {
@@ -1209,3 +1209,16 @@ body.modal-open canvas {
   color: #04111f;
 }
 .modal-box--small { max-width: 440px; }
+
+/* Мобильная адаптация для Compare.tsx - только до 768px */
+@media (max-width: 768px) {
+  .cmp-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Поднимаем featured карточку наверх */
+  .cpm-card-featured {
+    order: -1;
+  }
+};

@@ -47,13 +47,17 @@ const CARDS = [
   { icon: 'chart', title: 'Аналитика онлайн',    text: 'Расход воды и состояние фильтров в личном кабинете. Уведомления заранее.' },
 ];
 
+const COOLDOWN = 550;
+
 export default function Benefits() {
   const [current, setCurrent] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
-  const currentRef = useRef(0);
-  const cooldownRef = useRef(false);
-  // Track whether we've "snapped" the section to top
-  const snappedRef = useRef(false);
+  const sectionRef     = useRef<HTMLElement>(null);
+  const currentRef     = useRef(0);
+  const cooldownRef    = useRef(false);
+  const lockedRef      = useRef(false);
+  const lockedScrollY  = useRef(0);
+  // Флаг "только что отпустили" — чтобы isActive не захватил снова сразу
+  const releasedRef    = useRef(false);
 
   useEffect(() => { currentRef.current = current; }, [current]);
 
@@ -62,97 +66,123 @@ export default function Benefits() {
     currentRef.current = i;
   }, []);
 
+  const lockScroll = useCallback(() => {
+    if (lockedRef.current) return;
+    lockedRef.current = true;
+
+    // Сохраняем позицию где верх секции точно на верху экрана
+    const rect = sectionRef.current?.getBoundingClientRect();
+    lockedScrollY.current = rect
+      ? window.scrollY + rect.top
+      : window.scrollY;
+
+    document.body.style.overflow = 'hidden';
+    
+  }, []);
+
+  const unlockScroll = useCallback((direction?: 'up' | 'down') => {
+    if (!lockedRef.current) return;
+    lockedRef.current = false;
+
+    document.body.style.overflow = '';
+
+    // if (direction === 'up') {
+    //   window.scrollTo({ top: Math.max(0, lockedScrollY.current - 50), behavior: 'instant' as ScrollBehavior });
+    // }
+
+    releasedRef.current = true;
+    setTimeout(() => { releasedRef.current = false; }, 600);
+  }, []);
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const snapToSection = () => {
-      const top = section.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top, behavior: 'smooth' });
+    const isActive = () => {
+      if (releasedRef.current) return false;
+      const rect = section.getBoundingClientRect();
+      return rect.top <= 2 && rect.bottom >= window.innerHeight - 2;
+    };
+
+    const isApproaching = () => {
+      if (releasedRef.current) return false;
+      const rect = section.getBoundingClientRect();
+      return rect.top > 2 && rect.top < window.innerHeight * 0.5;
     };
 
     const onWheel = (e: WheelEvent) => {
-      const rect = section.getBoundingClientRect();
-      const scrollingDown = e.deltaY > 0;
-      const scrollingUp   = e.deltaY < 0;
+      const down = e.deltaY > 0;
+      const up   = e.deltaY < 0;
 
-      // Section hasn't reached top yet — let normal scroll happen,
-      // but if it's close (within 200px) snap it into place when scrolling down
-      if (rect.top > 1) {
-        if (scrollingDown && rect.top < 200 && !snappedRef.current) {
-          e.preventDefault();
-          snappedRef.current = true;
-          snapToSection();
+      if (lockedRef.current || isActive()) {
+
+        if (down && currentRef.current === CARDS.length - 1) {
+          unlockScroll('down');
+          return;
         }
+
+        if (up && currentRef.current === 0) {
+          const rect = section.getBoundingClientRect();
+          lockedScrollY.current = window.scrollY + rect.top;
+          unlockScroll('up');
+          return;
+        }
+
+        e.preventDefault();
+        lockScroll();
+
+        if (cooldownRef.current) return;
+        cooldownRef.current = true;
+        setTimeout(() => { cooldownRef.current = false; }, COOLDOWN);
+
+        if (down) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
+        if (up)   goTo(Math.max(0, currentRef.current - 1));
         return;
       }
 
-      // Section must actually be on screen (not already scrolled past)
-      if (rect.bottom < 0) return;
-
-      // Section is at top — we're in control
-      const atFirst = currentRef.current === 0;
-      const atLast  = currentRef.current === CARDS.length - 1;
-
-      // Always release scroll up — never hijack it
-      if (scrollingUp) {
-        snappedRef.current = false;
-        return;
+      if (down && isApproaching()) {
+        e.preventDefault();
+        const targetY = window.scrollY + section.getBoundingClientRect().top;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+        setTimeout(() => lockScroll(), 500);
       }
-
-      // Release on last card + scroll down
-      if (scrollingDown && atLast) {
-        snappedRef.current = false;
-        return;
-      }
-
-      // ALWAYS block the scroll event — no matter how fast the wheel spins
-      e.preventDefault();
-
-      // But only switch card once per cooldown
-      if (cooldownRef.current) return;
-      cooldownRef.current = true;
-      setTimeout(() => { cooldownRef.current = false; }, 550);
-
-      goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
     };
 
-    // Touch support
     let touchStartY = 0;
     const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
-    const onTouchEnd = (e: TouchEvent) => {
-      const rect = section.getBoundingClientRect();
-      if (rect.top > 1) return;
-
+    const onTouchEnd   = (e: TouchEvent) => {
+      if (!lockedRef.current && !isActive()) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       if (Math.abs(dy) < 35) return;
 
       const atFirst = currentRef.current === 0;
       const atLast  = currentRef.current === CARDS.length - 1;
-      if (dy > 0 && atLast) return;
-      if (dy < 0 && atFirst) return;
+
+      if (dy > 0 && atLast)  { unlockScroll('down'); return; }
+      if (dy < 0 && atFirst) { unlockScroll('up');   return; }
 
       if (dy > 0) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
       else        goTo(Math.max(0, currentRef.current - 1));
     };
 
-    window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-    return () => {
-      window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [goTo]);
+    window.addEventListener('wheel',      onWheel,      { passive: false });
+    window.addEventListener('touchstart', onTouchStart, { passive: true  });
+    window.addEventListener('touchend',   onTouchEnd,   { passive: true  });
 
-  // Swipe horizontal on card
+    return () => {
+      window.removeEventListener('wheel',      onWheel);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend',   onTouchEnd);
+      unlockScroll();
+    };
+  }, [goTo, lockScroll, unlockScroll]);
+
   const swipeX = useRef<number | null>(null);
   const onCardTouchStart = (e: React.TouchEvent) => { swipeX.current = e.touches[0].clientX; };
-  const onCardTouchEnd = (e: React.TouchEvent) => {
+  const onCardTouchEnd   = (e: React.TouchEvent) => {
     if (swipeX.current === null) return;
     const dx = swipeX.current - e.changedTouches[0].clientX;
-    if (dx > 40) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
+    if      (dx >  40) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
     else if (dx < -40) goTo(Math.max(0, currentRef.current - 1));
     swipeX.current = null;
   };
@@ -166,7 +196,6 @@ export default function Benefits() {
         className="pad"
         style={{ overflow: 'hidden', position: 'relative' }}
       >
-        {/* Header */}
         <div style={{ textAlign: 'center', maxWidth: '560px', margin: '0 auto 2.5rem' }} className="reveal">
           <span className="sec-tag">Преимущества</span>
           <h2 className="sec-h2">
@@ -174,7 +203,6 @@ export default function Benefits() {
           </h2>
         </div>
 
-        {/* Scroll hint */}
         <div style={{
           textAlign: 'center',
           marginBottom: '1rem',
@@ -191,7 +219,6 @@ export default function Benefits() {
           <span style={{ display: 'inline-block', animation: 'scrollBounce 1.5s ease-in-out infinite' }}>↓</span>
         </div>
 
-        {/* Slider */}
         <div
           style={{ position: 'relative', width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}
           onTouchStart={onCardTouchStart}
@@ -231,20 +258,28 @@ export default function Benefits() {
             ))}
           </div>
 
-          {/* Arrows */}
-          <button onClick={() => goTo(Math.max(0, current - 1))} disabled={current === 0} aria-label="Назад" style={arrowBtn('left', current === 0)}>
+          <button
+            onClick={() => goTo(Math.max(0, current - 1))}
+            disabled={current === 0}
+            aria-label="Назад"
+            style={arrowBtn('left', current === 0)}
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6"/>
             </svg>
           </button>
-          <button onClick={() => goTo(Math.min(CARDS.length - 1, current + 1))} disabled={current === CARDS.length - 1} aria-label="Вперёд" style={arrowBtn('right', current === CARDS.length - 1)}>
+          <button
+            onClick={() => goTo(Math.min(CARDS.length - 1, current + 1))}
+            disabled={current === CARDS.length - 1}
+            aria-label="Вперёд"
+            style={arrowBtn('right', current === CARDS.length - 1)}
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 18 15 12 9 6"/>
             </svg>
           </button>
         </div>
 
-        {/* Bottom controls */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginTop: '2rem' }}>
           <div style={{ width: '200px', height: '2px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
             <div style={{
@@ -293,7 +328,7 @@ export default function Benefits() {
       <style>{`
         @keyframes scrollBounce {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(5px); }
+          50%       { transform: translateY(5px); }
         }
       `}</style>
     </>
