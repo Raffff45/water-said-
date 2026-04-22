@@ -1208,3 +1208,4 @@ body.modal-open canvas {
   box-shadow: 0 20px 60px rgba(0, 100, 160, 0.14), 0 4px 16px rgba(0,0,0,0.08);
   color: #04111f;
 }
+.modal-box--small { max-width: 440px; }

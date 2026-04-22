@@ -393,13 +393,27 @@ interface ModalContentProps {
 }
 
 // ─── модалка с поддержкой тем ─────────────────────────────────────────────────
+function useTheme() {
+  const [isLight, setIsLight] = useState(
+    document.documentElement.getAttribute("data-theme") === "light"
+  );
 
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.getAttribute("data-theme") === "light");
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+
+  return isLight;
+}
 function ProductModalContent({
   eyebrow, title, description, badge,
   imgSrc, imgAlt, specs,
   contactHref, pdfPath, onClose,
 }: ModalContentProps) {
-  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+ const isLight = useTheme();
 
   const bg           = isLight ? "#f0f8ff"               : "#0c1c2e";
   const footerBg     = isLight ? "#e8f4ff"               : "#0a1826";

@@ -4,9 +4,10 @@ type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  small?: boolean;
 };
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, small }: ModalProps) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -31,7 +32,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   return (
     <div className="modal-overlay" onClick={onClose} style={{ isolation: "isolate" }}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+      <div className={`modal-box${small ? " modal-box--small" : ""}`} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>
