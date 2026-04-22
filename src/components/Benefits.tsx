@@ -55,7 +55,6 @@ export default function Benefits() {
   const currentRef     = useRef(0);
   const cooldownRef    = useRef(false);
   const lockedRef      = useRef(false);
-  const lockedScrollY  = useRef(0);
   // Флаг "только что отпустили" — чтобы isActive не захватил снова сразу
   const releasedRef    = useRef(false);
 
@@ -66,33 +65,13 @@ export default function Benefits() {
     currentRef.current = i;
   }, []);
 
-  const lockScroll = useCallback(() => {
-    if (lockedRef.current) return;
-    lockedRef.current = true;
+  // LOCKSCROLL
+  
+  // 
 
-    // Сохраняем позицию где верх секции точно на верху экрана
-    const rect = sectionRef.current?.getBoundingClientRect();
-    lockedScrollY.current = rect
-      ? window.scrollY + rect.top
-      : window.scrollY;
-
-    document.body.style.overflow = 'hidden';
-    
-  }, []);
-
-  const unlockScroll = useCallback((direction?: 'up' | 'down') => {
-    if (!lockedRef.current) return;
-    lockedRef.current = false;
-
-    document.body.style.overflow = '';
-
-    // if (direction === 'up') {
-    //   window.scrollTo({ top: Math.max(0, lockedScrollY.current - 50), behavior: 'instant' as ScrollBehavior });
-    // }
-
-    releasedRef.current = true;
-    setTimeout(() => { releasedRef.current = false; }, 600);
-  }, []);
+  // UNLOCKSCROLL
+  
+  //
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -101,65 +80,57 @@ export default function Benefits() {
     const isActive = () => {
       if (releasedRef.current) return false;
       const rect = section.getBoundingClientRect();
-      return rect.top <= 2 && rect.bottom >= window.innerHeight - 2;
-    };
-
-    const isApproaching = () => {
-      if (releasedRef.current) return false;
-      const rect = section.getBoundingClientRect();
-      return rect.top > 2 && rect.top < window.innerHeight * 0.5;
+      return rect.top <= -50 && rect.bottom >= window.innerHeight - 2;
     };
 
     const onWheel = (e: WheelEvent) => {
+      if (!isActive()) return;
+
       const down = e.deltaY > 0;
       const up   = e.deltaY < 0;
 
-      if (lockedRef.current || isActive()) {
-
-        if (down && currentRef.current === CARDS.length - 1) {
-          unlockScroll('down');
-          return;
-        }
-
-        if (up && currentRef.current === 0) {
-          const rect = section.getBoundingClientRect();
-          lockedScrollY.current = window.scrollY + rect.top;
-          unlockScroll('up');
-          return;
-        }
-
-        e.preventDefault();
-        lockScroll();
-
-        if (cooldownRef.current) return;
-        cooldownRef.current = true;
-        setTimeout(() => { cooldownRef.current = false; }, COOLDOWN);
-
-        if (down) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
-        if (up)   goTo(Math.max(0, currentRef.current - 1));
+      if (down && currentRef.current === CARDS.length - 1) {
+        releasedRef.current = true;
+        setTimeout(() => { releasedRef.current = false; }, 800);
         return;
       }
 
-      if (down && isApproaching()) {
-        e.preventDefault();
-        const targetY = window.scrollY + section.getBoundingClientRect().top;
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-        setTimeout(() => lockScroll(), 500);
+      if (up && currentRef.current === 0) {
+        releasedRef.current = true;
+        setTimeout(() => { releasedRef.current = false; }, 800);
+        return;
       }
+
+      e.preventDefault();
+
+      if (cooldownRef.current) return;
+      cooldownRef.current = true;
+      setTimeout(() => { cooldownRef.current = false; }, COOLDOWN);
+
+      if (down) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
+      if (up)   goTo(Math.max(0, currentRef.current - 1));
     };
 
     let touchStartY = 0;
     const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
     const onTouchEnd   = (e: TouchEvent) => {
-      if (!lockedRef.current && !isActive()) return;
+      if (!isActive()) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       if (Math.abs(dy) < 35) return;
 
       const atFirst = currentRef.current === 0;
       const atLast  = currentRef.current === CARDS.length - 1;
 
-      if (dy > 0 && atLast)  { unlockScroll('down'); return; }
-      if (dy < 0 && atFirst) { unlockScroll('up');   return; }
+      if (dy > 0 && atLast)  { 
+        releasedRef.current = true;
+        setTimeout(() => { releasedRef.current = false; }, 800);
+        return; 
+      }
+      if (dy < 0 && atFirst) { 
+        releasedRef.current = true;
+        setTimeout(() => { releasedRef.current = false; }, 800);
+        return; 
+      }
 
       if (dy > 0) goTo(Math.min(CARDS.length - 1, currentRef.current + 1));
       else        goTo(Math.max(0, currentRef.current - 1));
@@ -173,9 +144,8 @@ export default function Benefits() {
       window.removeEventListener('wheel',      onWheel);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend',   onTouchEnd);
-      unlockScroll();
     };
-  }, [goTo, lockScroll, unlockScroll]);
+  }, [goTo]);
 
   const swipeX = useRef<number | null>(null);
   const onCardTouchStart = (e: React.TouchEvent) => { swipeX.current = e.touches[0].clientX; };
