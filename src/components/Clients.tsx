@@ -127,8 +127,27 @@ const clients: ClientData[] = [
   },
 ];
 
+function useTheme() {
+  const [isLight, setIsLight] = useState(
+    document.documentElement.getAttribute("data-theme") === "light"
+  );
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsLight(document.documentElement.getAttribute("data-theme") === "light");
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+  return isLight;
+}
+
 export default function Clients() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  // Цвета крестика — без useTheme, через CSS переменные темы
+  const isLight    = useTheme();
+  const closeBg    = isLight ? "rgba(0,60,120,0.1)"  : "rgba(255,255,255,0.1)";
+  const closeColor = isLight ? "rgba(0,40,80,0.6)"   : "rgba(255,255,255,0.75)";
 
   return (
     <section id="clients" className="pad">
@@ -163,18 +182,24 @@ export default function Clients() {
 
       {activeIndex !== null && (
         <Modal isOpen={true} onClose={() => setActiveIndex(null)}>
-          <div style={{ paddingTop: '0.5rem' }}>
+          <div style={{ padding: '1.5rem 2rem' }}>
 
-            <span style={{
+            {/* Крестик — точно так же как в Products.tsx */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }}>
+              <button
+                onClick={() => setActiveIndex(null)}
+                style={{
+                  width: '32px', height: '32px', borderRadius: '50%',
+                  background: closeBg, border: 'none', color: closeColor,
+                  fontSize: '15px', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >✕</button>
+            </div>
+
+            {/* Тег */}
+            <span className="client-tag" style={{
               display: 'inline-block',
-              background: 'rgba(0,200,255,0.1)',
-              border: '1px solid rgba(0,200,255,0.25)',
-              color: '#00c8ff',
-              fontSize: '0.58rem',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              padding: '0.22rem 0.8rem',
-              borderRadius: '2rem',
               marginBottom: '1rem',
             }}>
               {clients[activeIndex].tag}
@@ -184,7 +209,7 @@ export default function Clients() {
               fontFamily: "'Playfair Display', Georgia, serif",
               fontSize: '1.7rem',
               fontWeight: 300,
-              color: '#f0faff',
+              color: 'var(--pearl)',
               marginBottom: '0.5rem',
               lineHeight: 1.2,
             }}>
@@ -192,7 +217,7 @@ export default function Clients() {
             </h3>
 
             <p style={{
-              color: '#9fc0d4',
+              color: 'var(--silver)',
               fontSize: '0.85rem',
               marginBottom: '1.6rem',
               lineHeight: 1.7,
@@ -203,18 +228,18 @@ export default function Clients() {
             <div style={{
               width: '100%',
               height: '1px',
-              background: 'rgba(0,200,255,0.1)',
+              background: 'var(--border)',
               marginBottom: '1.4rem',
             }} />
 
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.6rem' }}>
               {clients[activeIndex].modal.points.map((point, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', fontSize: '0.85rem', color: '#e8f6ff', lineHeight: 1.6 }}>
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', fontSize: '0.85rem', color: 'var(--ice)', lineHeight: 1.6 }}>
                   <span style={{
                     width: '6px',
                     height: '6px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #00c8ff, #00e5cc)',
+                    background: 'linear-gradient(135deg, var(--cyan), var(--teal))',
                     flexShrink: 0,
                     marginTop: '0.45rem',
                   }} />
@@ -226,12 +251,12 @@ export default function Clients() {
             <div style={{
               width: '100%',
               height: '1px',
-              background: 'rgba(0,200,255,0.1)',
+              background: 'var(--border)',
               marginBottom: '1.4rem',
             }} />
 
             <p style={{
-              color: '#9fc0d4',
+              color: 'var(--silver)',
               fontSize: '0.8rem',
               lineHeight: 1.8,
               marginBottom: '1.8rem',
@@ -242,9 +267,9 @@ export default function Clients() {
             <button
               style={{
                 width: '100%',
-                background: 'linear-gradient(135deg, #00c8ff, #00e5cc)',
+                background: 'linear-gradient(135deg, var(--cyan), var(--teal))',
                 border: 'none',
-                color: '#04111f',
+                color: 'var(--ink)',
                 padding: '0.9rem',
                 borderRadius: '2rem',
                 fontFamily: "'Outfit', sans-serif",

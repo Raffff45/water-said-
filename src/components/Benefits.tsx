@@ -178,7 +178,7 @@ export default function Benefits() {
           marginBottom: '1rem',
           fontSize: '0.75rem',
           letterSpacing: '0.1em',
-          color: 'rgba(255,255,255,0.28)',
+          color: 'var(--silver)',
           textTransform: 'uppercase',
           opacity: current === 0 ? 1 : 0,
           transition: 'opacity 0.5s',
@@ -282,7 +282,7 @@ export default function Benefits() {
 
           <div style={{
             fontSize: '0.72rem',
-            color: 'rgba(255,255,255,0.28)',
+            color: 'var(--silver)',
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
             opacity: current === CARDS.length - 1 ? 1 : 0,
